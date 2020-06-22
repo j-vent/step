@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Questrial&display=swap');
+
 #content {
   margin-left: auto;
   margin-right: auto;
@@ -6,4 +8,17 @@
 
 #greeting-container {
   margin-top: 20px;
+}
+
+body{
+    background: url("img/flowers.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+h1{
+    color:darkslategrey;
+    font-family:Questrial;
+    font-size:80px;
 }
