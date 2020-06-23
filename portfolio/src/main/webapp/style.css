@@ -11,15 +11,14 @@
 #greeting-container {
   margin-top: 20px;
 }
+
 header{
     background: url("img/flowers.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
-body{
-    
-}
+
 
 h1{
     color:darkslategrey;
@@ -30,6 +29,10 @@ h2{
     color:darkslategrey;
     font-family:Questrial;
     font-size:70px;
+}
+h3{
+    color:darkslategrey;
+    font-family:Questrial;
 }
 
 .pfp{
@@ -63,7 +66,6 @@ img.ctr {
 p.ctr {
     display: block;
     margin: 0 auto;
-
 }
 
 #blog{
@@ -72,17 +74,9 @@ p.ctr {
 }
 
 .blogtext{
-
-   /* float: left; */
     font-family: Raleway, sans-serif;
     font-size: 20px;
-    /* display:inline; */
-}
-
-.blogimg{
-     /*float:right;
     
-    display:inline;*/
 }
 
 .blankspace{
@@ -91,5 +85,4 @@ p.ctr {
 
 .blogpost{
     display:flex;
-
 }

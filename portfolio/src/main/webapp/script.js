@@ -27,8 +27,9 @@ function addRandomGreeting() {
   greetingContainer.innerText = greeting;
 }
 
-window.addEventListener("scroll", function() {
-     console.log('in listener')
+
+ window.addEventListener("scroll", function() {
+
   var elementTarget = document.getElementById("proj");
 
   if (window.pageYOffset>= (elementTarget.offsetTop) ){
@@ -41,4 +42,4 @@ window.addEventListener("scroll", function() {
     
   }
 });
-    
+
