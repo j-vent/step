@@ -26,21 +26,3 @@ function addRandomGreeting() {
   const greetingContainer = document.getElementById('greeting-container');
   greetingContainer.innerText = greeting;
 }
-
-
- window.addEventListener("scroll", function() {
-     console.log('in listener')
-  var elementTarget = document.getElementById("proj");
-
-  if (window.pageYOffset>= (elementTarget.offsetTop) ){
-      console.log("You've scrolled past the projects");
-      document.getElementById("blog").style.display = 'block';
-       
-  }
-  else{
-      document.getElementById("blog").style.display = 'none';
-    
-  }
-});
-    
-	
