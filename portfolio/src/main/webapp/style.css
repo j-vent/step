@@ -1,3 +1,7 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Questrial&family=Raleway&display=swap');
+
+
 #content {
   margin-left: auto;
   margin-right: auto;
@@ -6,4 +10,57 @@
 
 #greeting-container {
   margin-top: 20px;
+}
+header{
+    background: url("img/flowers.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+body{
+    
+}
+
+h1{
+    color:darkslategrey;
+    font-family:Questrial;
+    font-size:75px;
+}
+h2{
+    color:darkslategrey;
+    font-family:Questrial;
+    font-size:70px;
+}
+
+.pfp{
+
+    border-radius: 50%;
+}
+
+.center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
+
+.icon{
+    color:darkslategrey;
+    font-size:20px;
+    border-radius: 50%;
+}
+
+p{
+     font-family:Raleway;
+     font-size: 24px;
+}
+
+img.ctr {
+    display: block;
+    margin: 0 auto;
+}
+
+p.ctr {
+    display: block;
+    margin: 0 auto;
 }
