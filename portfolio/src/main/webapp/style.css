@@ -75,16 +75,17 @@ p.ctr {
 }
 
 .blogtext{
-    float: left;
+
+   /* float: left; */
     font-family: Raleway, sans-serif;
     font-size: 20px;
-    display:inline;
+    /* display:inline; */
 }
 
 .blogimg{
-    float:right;
+     /*float:right;
     
-    display:inline;
+    display:inline;*/
 }
 
 .blankspace{
