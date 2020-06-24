@@ -23,12 +23,17 @@ header{
 h1{
     color:darkslategrey;
     font-family:Questrial;
-    font-size:75px;
+    margin:auto;
+    font-size:85px;
+    padding-top:20px;
+    text-align:center;
+
+
 }
 h2{
     color:darkslategrey;
     font-family:Questrial;
-    font-size:70px;
+    font-size:60px;
 }
 h3{
     color:darkslategrey;
@@ -80,9 +85,10 @@ p.ctr {
 }
 
 .blankspace{
-    height:400px;
+    height:800px;
 }
 
 .blogpost{
     display:flex;
 }
+
