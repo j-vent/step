@@ -63,4 +63,33 @@ img.ctr {
 p.ctr {
     display: block;
     margin: 0 auto;
+
+}
+
+#blog{
+    display:none;
+    
+}
+
+.blogtext{
+
+   /* float: left; */
+    font-family: Raleway, sans-serif;
+    font-size: 20px;
+    /* display:inline; */
+}
+
+.blogimg{
+     /*float:right;
+    
+    display:inline;*/
+}
+
+.blankspace{
+    height:400px;
+}
+
+.blogpost{
+    display:flex;
+
 }
