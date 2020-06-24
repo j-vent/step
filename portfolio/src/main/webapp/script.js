@@ -13,10 +13,10 @@
 // limitations under the License.
 
 function msg(){
-     var text = prompt("Leave Justine a message!");
+     var text = prompt("Leave Justine a message: ");
      var name = prompt("Your name: ")
      if (name != null && name.length >0) {
-         alert("Thanks for your message "+name+ "! Justine will get back to you shortly");
+         alert("Thanks for your message "+name+ "! Justine will get back to you shortly.");
     }
 }
 
