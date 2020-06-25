@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Google Student Training in Engineering Program
 
 This repo contains the projects you'll work on for the first half of STEP.
@@ -14,5 +14,5 @@ To get started:
 Then follow the on-screen instructions to set up your repo.
 =======
 # week1
->>>>>>> d3275d0c683facd6b16a5d04a3d75ac0ba313242
+
 This repo has Justine's Portfolio and STEP projects :)
