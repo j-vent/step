@@ -29,7 +29,7 @@ function bunnymsg(){
 window.addEventListener("scroll", function() {
   var elementTarget = document.getElementById("proj");
   
-  if (window.pageYOffset>= (elementTarget.offsetTop - 100) ){
+  if (window.pageYOffset>= (elementTarget.offsetTop - 300) ){
     console.log("You've scrolled past the projects");
     document.getElementById("blog").style.display = 'block';
   }
