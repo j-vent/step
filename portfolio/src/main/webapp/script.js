@@ -22,7 +22,7 @@ function msg(){
 
 function bunnymsg(){
   var bunny=document.getElementById('bunny');
-  document.getElementById("bun_msg").innerHTML="*bunny noises*";
+  document.getElementById("bun_msg").textContent="*bunny noises*";
 }
 
 
@@ -37,5 +37,4 @@ window.addEventListener("scroll", function() {
     document.getElementById("blog").style.display = 'none';
   }
 });
-
 

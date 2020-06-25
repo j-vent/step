@@ -1,8 +1,7 @@
-
 @import url('https://fonts.googleapis.com/css2?family=Questrial&family=Raleway&display=swap');
 
 
-#content {
+.content {
   margin-left: auto;
   margin-right: auto;
   width: 650px;
@@ -97,8 +96,6 @@ p.ctr {
 
 .blogpost{
     display:flex;
-  
-
 }
 
 .zoom {
