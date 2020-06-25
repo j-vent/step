@@ -51,7 +51,7 @@
         <div class="blogpost">
 
         <p>I don't have any pets of my own, though I do really like bunnies. Here's a photo of a cute rabbit that you can pet (by clicking):</p>
-         <img id="bunny" style="height: 50px;width:80px;" src="img/bunny.jpg" alt="white rabbit"/>
+         <img id="bunny" onclick="bunnymsg()" style="height: 50px;width:80px;" src="img/bunny.jpg" alt="white rabbit"/>
         <div id="bun_msg" style=" color:darkslategrey;"></div>
         </div>
     </div>
@@ -139,9 +139,11 @@
     </div>
     
 
-   
-
     <div class="blankspace"></div> <!-- necessary to allow for scrolling to blog section" -->
+
+    <footer>
+        <button onclick="msg()" style="float:right; margin-bottom:20px;"><i class="fa fa-commenting-o fa-4x"aria-hidden="true"></i></button>
+        </footer>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
@@ -149,9 +151,7 @@
 
     </body>
    
-    <footer>
-        <button onclick="msg()" style="float:right; margin-bottom:20px;"><i class="fa fa-commenting-o fa-4x"aria-hidden="true"></i></button>
-        </footer>
+    
   
   
       

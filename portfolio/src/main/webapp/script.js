@@ -13,34 +13,29 @@
 // limitations under the License.
 
 function msg(){
-     var text = prompt("Leave Justine a message: ");
-     var name = prompt("Your name: ")
-     if (name != null && name.length >0) {
-         alert("Thanks for your message "+name+ "! Justine will get back to you shortly.");
-    }
+  var text = prompt("Leave Justine a message: ");
+  var name = prompt("Your name: ");
+  if (name != null && name.length>0){
+    alert("Thanks for your message "+name+ "! Justine will get back to you shortly.");
+  }
+}
+
+function bunnymsg(){
+  var bunny=document.getElementById('bunny');
+  document.getElementById("bun_msg").innerHTML="*bunny noises*";
 }
 
 
-
- window.addEventListener("scroll", function() {
-
+window.addEventListener("scroll", function() {
   var elementTarget = document.getElementById("proj");
   
-    console.log(window.pageYOffset)
-    console.log(elementTarget.offsetTop)
   if (window.pageYOffset>= (elementTarget.offsetTop - 100) ){
-      console.log("You've scrolled past the projects");
-      document.getElementById("blog").style.display = 'block';
-       
+    console.log("You've scrolled past the projects");
+    document.getElementById("blog").style.display = 'block';
   }
   else{
-      document.getElementById("blog").style.display = 'none';
-    
+    document.getElementById("blog").style.display = 'none';
   }
-
-  var bunny=document.getElementById('bunny');
-  bunny.addEventListener("click", function(){
-      document.getElementById("bun_msg").innerHTML="*bunny noises*"
-  })
 });
+
 
