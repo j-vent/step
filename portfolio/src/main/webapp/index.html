@@ -9,7 +9,10 @@
     integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
   </head>
-  <header>
+  
+     
+  <body > 
+    <header>
     
 
     <h1 class="center">Justine Ventura</h1>
@@ -17,30 +20,23 @@
       <img class="pfp ctr" style="text-align:center" src="img/bitmoji.png"/>
       <br/>
       <div style="margin:auto;width=50%;text-align:center;padding-bottom:15px">
-           <a href="https://www.linkedin.com/in/justine-ventura-6275a8149?originalSubdomain=ca"><i class="fa fa-linkedin fa-3x" 
-      style="color:darkslategrey;
-    border-radius: 50%; margin-left:15px;margin-right:15px" aria-hidden="true"></i></a>
-      <a href="https://github.com/j-vent"><i class="fa fa-github fa-3x" style="color:darkslategrey;
-    border-radius: 50%; margin-right:15px"  aria-hidden="true"></i></a>
-      <a href="https://moma.corp.google.com/person/justineventura"><i class="fa fa-google fa-3x" style="color:darkslategrey;
-    border-radius: 50%; margin-right:15px" aria-hidden="true"></i></a>
-    <a href="mailto:justine.ventura14@gmail.com"><i class="fa fa-envelope fa-3x" style="color:darkslategrey;
-    border-radius: 50%; margin-right:15px" aria-hidden="true"></i></a>
-    <a href="https://www.instagram.com/venturadventures/?hl=en"><i class="fa fa-instagram fa-3x" style="color:darkslategrey;
-    border-radius: 50%; margin-right:15px" aria-hidden="true"></i></a>
+           <a href="https://www.linkedin.com/in/justine-ventura-6275a8149?originalSubdomain=ca"><i class="icon fa fa-linkedin fa-3x" 
+     aria-hidden="true"></i></a>
+      <a href="https://github.com/j-vent"><i class="icon fa fa-github fa-3x"  aria-hidden="true"></i></a>
+      <a href="https://moma.corp.google.com/person/justineventura"><i class="icon fa fa-google fa-3x" aria-hidden="true"></i></a>
+    <a href="mailto:justine.ventura14@gmail.com"><i  class="icon fa fa-envelope fa-3x" aria-hidden="true"></i></a>
+    <a href="https://www.instagram.com/venturadventures/?hl=en"><i class=" icon fa fa-instagram fa-3x" aria-hidden="true"></i></a>
       </div>    
     </header>
-     
-  <body > 
     <div id="content">
         <br/>
        <br/>
-       <h2 class="center" >About</h2>
-   
+       <h2 class="center">About</h2>
+    
       <p >Welcome to my portfolio!</p>
       <p >My name is Justine and I am an incoming third year student in Software Engineering. 
           I study at the University of Alberta, in my hometown of Edmonton, Canada. Technically it's my
-          secondary hometown as I am originally from Manila, Philippines and my family immigrated to Canada when I was 8 y/o.
+          secondary hometown as I am originally from Manila, Philippines and my family immigrated to Canada when I was 8 years old.
            I have dabbled in many areas of CS but I really enjoy web dev and Java dev. 
           Currently I am a STEP intern at Google, and I am excited to learn more about Javascript and web dev in general. 
           Other areas of interest are machine learning and computer vision. 
@@ -52,10 +48,15 @@
           trivia (I played on my high school's team and I'd love to be on Jeopardy! someday), makeup, and cooking.  
         </p>
 
+        <div class="blogpost">
+
+        <p>I don't have any pets of my own, though I do really like bunnies. Here's a photo of a cute rabbit that you can pet (by clicking):</p>
+         <img id="bunny" style="height: 50px;width:80px;" src="img/bunny.jpg" alt="white rabbit"/>
+        <div id="bun_msg" style=" color:darkslategrey;"></div>
+        </div>
     </div>
     <br/>
     <div id="content">
-      
     <h2 class="center">Past Projects</h2>
        <p class="center" ><i>Three of my most recent projects</i></p>
     </div>
@@ -64,16 +65,15 @@
       <div class="row">
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-             <img onmouseover="enlarge(this)" onmouseout="normal(this)"class="ctr" style="text-align:center; height:225x; width:325px;" 
-             src="img/ee.png"/>
+             <img class="ctr zoom" style="text-align:center; height:225x; width:325px;" 
+             src="img/ee.png" />
             <div class="card-body">
               <p class="card-text"> EE Club Website. I created,deployed and maintained an updated website for 
                   the Electrical Engineering Club at the University of Alberta.</p>
               <h6 class="card-subtitle text-muted">Technologies Used: Django (Python), HTML/CSS, JS, Bootstrap</h6>
               <div class="d-flex justify-content-between align-items-center">
                 
-              <button type="button" onclick="window.location.href='http://eeclub.ca';" class="btn btn-sm btn-outline-secondary"
-             >Link</button>
+              <a href="http://eeclub.ca" target="_blank" class="btn btn-sm btn-outline-secondary">Link</a>
                   
                 
                 <small class="text-muted">May 2020</small>
@@ -83,20 +83,15 @@
         </div>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-             <img onmouseover="enlarge(this)" onmouseout="normal(this)" class="ctr" style="text-align:center;height:225x; width:325px" 
+             <img class=" zoom ctr" style="text-align:center;height:225x; width:325px" 
              src="img/rsz_arduino.jpg"/>
             <div class="card-body">
               <p class="card-text">Dijkstras and Dragons. Project for CMPUT 275. I created a block-based game similar to 
                   PacMan where the knight is being chased by a BFS-controlled dragon.</p>
               <h6 class="card-subtitle text-muted">Technologies Used: C++, Arduino </h6>
               <div class="d-flex justify-content-between align-items-center">
-                
-                   <button type="button" onclick="window.location.href='https://github.com/j-vent/dijkstra-and-dragons'; " 
-                   class="btn btn-sm btn-outline-secondary">
-                      Link</button>
-                    
-                  
-                
+                 <a href="https://github.com/j-vent/dijkstra-and-dragons" target="_blank" class="btn btn-sm btn-outline-secondary">Link</a>
+
                 <small class="text-muted">March 2020</small>
               </div>
             </div>
@@ -104,17 +99,14 @@
         </div>
         <div class="col-md-4">
           <div class="card mb-4 shadow-sm">
-             <img onmouseover="enlarge(this)" onmouseout="normal(this)" class="ctr" style="text-align:center;height:225x; width:325px;" 
+             <img class="zoom ctr" style="text-align:center;height:225x; width:325px;" 
              src="img/image.png"/>
             <div class="card-body">
               <p class="card-text">Cork. Project for HackedBeta 2019 Hackathon. Made a web app to compile campus posters
                    into a single website where students can filter and sign up for events.</p>
               <h6 class="card-subtitle text-muted">Technologies Used: Django (Python), HTML/CSS, JS</h6>
               <div class="d-flex justify-content-between align-items-center">
-                <button type="button" onclick="window.location.href='https://github.com/katielin42/Django-Web-App-CorkBoard';" 
-                class="btn btn-sm btn-outline-secondary">
-                    Link</button>
-                 
+                   <a href="https://github.com/katielin42/Django-Web-App-CorkBoard" target="_blank" class="btn btn-sm btn-outline-secondary">Link</a>
                 <small class="text-muted">Nov 2019</small>
               </div>
             </div>
@@ -139,8 +131,11 @@
             getting proper diagnostics and how to best change parameters to get the best possible fit in your models.  </p>
         <img src="img/bot.png" class="blogimg"/>
        
+        
         </div>
-         <a href="blogs/blog0.html"><button type="button" class="btn btn-sm btn-outline-secondary">Read More</button></a>
+         
+        <a href="blogs/blog0.html"><button type="button" class="btn btn-sm btn-outline-secondary" style=
+         "margin-left:14px;">Read More</button></a>
     </div>
     
 

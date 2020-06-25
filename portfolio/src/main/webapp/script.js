@@ -20,14 +20,7 @@ function msg(){
     }
 }
 
-function enlarge(img){
-    img.style.height="400px";
-    img.style.width = "350px";
-}
-function normal(img){
-    img.style.height="300px";
-    img.style.width = "300px";
-}
+
 
  window.addEventListener("scroll", function() {
 
@@ -44,5 +37,10 @@ function normal(img){
       document.getElementById("blog").style.display = 'none';
     
   }
+
+  var bunny=document.getElementById('bunny');
+  bunny.addEventListener("click", function(){
+      document.getElementById("bun_msg").innerHTML="*bunny noises*"
+  })
 });
 
