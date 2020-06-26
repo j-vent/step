@@ -15,6 +15,8 @@
 package com.google.sps.servlets;
 
 import java.io.IOException;
+import com.google.gson.Gson;
+import java.util.ArrayList;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +28,14 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    ArrayList<String> quotes = new ArrayList<String>();
+    quotes.add("'The future belongs to those who believe in the beauty of their dreams.'-Eleanor Roosevelt");
+    quotes.add("'It is during our darkest moments that we must focus to see the light.' -Aristotle");
+    quotes.add("'Thanks for visiting my site' - Justine");
+    Gson gson = new Gson();
+    String json=gson.toJson(quotes);
     response.setContentType("text/html;");
-    response.getWriter().println("Hello justine!");
+    response.getWriter().println(json);
+ 
   }
 }
