@@ -48,6 +48,11 @@ h3{
   border-radius: 50%;
 }
 
+.shefpic{
+  width:250px;
+  height:250px;
+}
+
 .center {
   display: block;
   margin-left: auto;
