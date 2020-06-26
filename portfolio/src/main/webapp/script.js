@@ -37,3 +37,11 @@ window.addEventListener("scroll", function() {
   }
 });
 
+async function getGreeting() {
+  const response = await fetch('/data');
+  const quotes = await response.json();
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  document.getElementById('quote-container').innerText = quote;
+}
+
+
