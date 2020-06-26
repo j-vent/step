@@ -30,12 +30,6 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    /**
-    quotes.add("'The future belongs to those who believe in the beauty of their dreams.'-Eleanor Roosevelt");
-    quotes.add("'It is during our darkest moments that we must focus to see the light.' -Aristotle");
-    quotes.add("'Thanks for visiting my site' - Justine");
-    **/
-
     Gson gson = new Gson();
     String json=gson.toJson(comments);
     

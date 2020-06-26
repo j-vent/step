@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="style.css">
   </head>
   
-  <body> 
+  <body onLoad="getComments()"> 
 
     <header>
       <h1 class="center">Justine Ventura</h1>
@@ -129,6 +129,7 @@
          "margin-left:14px;">Read More</a> 
     </div>
 
+
     <div id="blankspace"></div> <!-- necessary to allow for scrolling to blog section" -->
 
     <div class="content">
@@ -139,11 +140,13 @@
         </form>
     </div>
 
+
     <footer>
-        <h1 id='quote-container'></h1>
+        <p id='comment-container'></p>
+
 
         <button onclick="msg()" style="float:right; margin-bottom:20px;"><i class="fa fa-commenting-o fa-4x"aria-hidden="true"></i></button>
-        </footer>
+    </footer>
 
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
