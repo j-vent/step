@@ -32,9 +32,11 @@ public class DataServlet extends HttpServlet {
     quotes.add("'The future belongs to those who believe in the beauty of their dreams.'-Eleanor Roosevelt");
     quotes.add("'It is during our darkest moments that we must focus to see the light.' -Aristotle");
     quotes.add("'Thanks for visiting my site' - Justine");
+
     Gson gson = new Gson();
     String json=gson.toJson(quotes);
-    response.setContentType("text/html;");
+    
+    response.setContentType("application/json;");
     response.getWriter().println(json);
  
   }
