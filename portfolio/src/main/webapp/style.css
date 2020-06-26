@@ -1,6 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Questrial&family=Raleway&display=swap');
 
-
 .content {
   margin-left: auto;
   margin-right: auto;
@@ -12,37 +11,35 @@
 }
 
 header{
-    background: url("img/flowers.jpg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
+  background: url("img/flowers.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
-
 
 h1{
-    color:darkslategrey;
-    font-family:Questrial;
-    margin:auto;
-    font-size:85px;
-    padding-top:20px;
-    text-align:center;
-
-
+  color:darkslategrey;
+  font-family:Questrial;
+  margin:auto;
+  font-size:85px;
+  padding-top:20px;
+  text-align:center;
 }
+
 h2{
-    color:darkslategrey;
-    font-family:Questrial;
-    font-size:60px;
+  color:darkslategrey;
+  font-family:Questrial;
+  font-size:60px;
 }
+
 h3{
-    color:darkslategrey;
-    font-family:Questrial;
-    margin:15px;
+  color:darkslategrey;
+  font-family:Questrial;
+  margin:15px;
 }
 
 .pfp{
-
-    border-radius: 50%;
+  border-radius: 50%;
 }
 
 .center {
@@ -52,42 +49,47 @@ h3{
   width: 50%;
 }
 
+#iconlist{
+  margin:auto;
+  width:50%;
+  text-align:center;
+  padding-bottom:15px;
+}
+
 .icon{
-   color:darkslategrey;
-    border-radius: 50%; 
-    margin-left:15px;
-    margin-right:15px;
+  color:darkslategrey;
+  border-radius: 50%; 
+  margin-left:15px;
+  margin-right:15px;
     
 }
 .icon:hover{
-    color:rgba(47, 79, 79, 0.432);
-    text-decoration: none;
+  color:rgba(47, 79, 79, 0.432);
+  text-decoration: none;
 }
 
 p{
-     font-family:Raleway;
-     font-size: 24px;
+  font-family:Raleway;
+  font-size: 24px;
 }
 
 img.ctr {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 p.ctr {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 #blog{
-    display:none;
-    
+  display:none;
 }
 
 .blogtext{
-    font-family: Raleway, sans-serif;
-    font-size: 20px;
-    
+  font-family: Raleway, sans-serif;
+  font-size: 20px;
 }
 
 .blankspace{
@@ -95,16 +97,24 @@ p.ctr {
 }
 
 .blogpost{
-    display:flex;
+  display:flex;
 }
 
 .zoom {
   transition: transform .2s;
-  width: 300px;
-  height: 250px;
   margin: 0 auto;
 }
-
 .zoom:hover{
-    transform: scale(1.25)
+  transform: scale(1.25)
+}
+
+.projpic{
+  text-align:center;
+  height:200x; 
+  width:325px;
+}
+
+#chatbtn{
+  float:right; 
+  margin-bottom:20px;
 }
