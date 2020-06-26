@@ -132,7 +132,7 @@
     <div id="blankspace"></div> <!-- necessary to allow for scrolling to blog section" -->
 
     <div class="content">
-        <form method="POST">
+        <form method="POST" action="/data">
             <p>Leave Justine a comment:</p>
             <input name="comment" type="text">
             <input type="submit"/>
@@ -140,8 +140,6 @@
     </div>
 
     <footer>
-
-        <button onclick="getGreeting()" style="float:left; margin-bottom:20px;">Click For Quote!</button>
         <h1 id='quote-container'></h1>
 
         <button onclick="msg()" style="float:right; margin-bottom:20px;"><i class="fa fa-commenting-o fa-4x"aria-hidden="true"></i></button>
