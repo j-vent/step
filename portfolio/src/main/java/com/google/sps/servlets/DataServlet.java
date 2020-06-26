@@ -28,13 +28,13 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<String> quotes = new ArrayList<String>();
-    quotes.add("'The future belongs to those who believe in the beauty of their dreams.'-Eleanor Roosevelt");
-    quotes.add("'It is during our darkest moments that we must focus to see the light.' -Aristotle");
-    quotes.add("'Thanks for visiting my site' - Justine");
+    ArrayList<String> comments = new ArrayList<String>();
+    comments.add("'The future belongs to those who believe in the beauty of their dreams.'-Eleanor Roosevelt");
+    comments.add("'It is during our darkest moments that we must focus to see the light.' -Aristotle");
+    comments.add("'Thanks for visiting my site' - Justine");
 
     Gson gson = new Gson();
-    String json=gson.toJson(quotes);
+    String json=gson.toJson(comments);
     
     response.setContentType("application/json;");
     response.getWriter().println(json);
