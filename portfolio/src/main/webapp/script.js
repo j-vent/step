@@ -12,17 +12,28 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
-
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
-  const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+function msg(){
+  var text = prompt("Leave Justine a message: ");
+  var name = prompt("Your name: ");
+  if (name != null && name.length>0){
+    alert("Thanks for your message "+name+ "! Justine will get back to you shortly.");
+  }
 }
+
+function bunnymsg(){
+  var bunny=document.getElementById('bunny');
+  document.getElementById("bun_msg").textContent="*bunny noises*";
+}
+
+
+window.addEventListener("scroll", function() {
+  var elementTarget = document.getElementById("proj");
+  if (window.pageYOffset>= (elementTarget.offsetTop ) ){
+    console.log("You've scrolled past the projects");
+    document.getElementById("blog").style.display = 'block';
+  }
+  else{
+    document.getElementById("blog").style.display = 'none';
+  }
+});
+
