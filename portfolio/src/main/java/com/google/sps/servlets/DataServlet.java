@@ -38,24 +38,43 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment");
+    int numComments = Integer.valueOf(request.getParameter("numComments"));
+    System.out.println("num comments:");
+    System.out.println(numComments);
+    // int numComments = 2;
+    Query query = new Query("Comment"); // get by date posted
 
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments= new ArrayList<>();
+    
     for (Entity entity: results.asIterable()){
-        String text = (String) entity.getProperty("text");
-        Comment comment = new Comment(text);
-        comments.add(comment);
+        if(comments.size() < numComments){
+          String text = (String) entity.getProperty("text");
+          Comment comment = new Comment(text);
+          comments.add(comment);
+          System.out.println("COMMMENT");
+          System.out.println(comments.size());
+          
+        }
+        else{
+            break;
+        } 
     }
+    // response.sendRedirect("/index.html");
+    
     Gson gson = new Gson();
     
-    String json=gson.toJson(comments);
+    //String json=gson.toJson(comments);
     response.setContentType("application/json;");
-    response.getWriter().println(json);
+    //response.getWriter().println(json);
+    response.getWriter().println(gson.toJson(comments));
+
+    // response.sendRedirect("/index.html");
  
   }
 
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = request.getParameter("text");
     

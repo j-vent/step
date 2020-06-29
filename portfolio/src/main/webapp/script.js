@@ -38,13 +38,24 @@ window.addEventListener("scroll", function() {
 });
 
 async function getComments() {
-  const response = await fetch('/data');
+    
+  const numComments = document.getElementById("numComments").value;
+  const response = await fetch('/data?numComments='+ numComments);
   const comments = await response.json();
-  console.log(comments);
+  
   const commentSection = document.getElementById('comment-list');
+  
+  console.log(comments);
+  console.log(numComments);
+  
   comments.forEach((comment) => {
       commentSection.appendChild(createCommentElement(comment));
-  })
+  });
+  /*
+  for(var i=0; i < numComments; i++){
+      commentSection.appendChild(createCommentElement(comments[i]));
+  }
+  */
 }
 
 function createCommentElement(comment){
