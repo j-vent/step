@@ -40,8 +40,19 @@ window.addEventListener("scroll", function() {
 async function getComments() {
   const response = await fetch('/data');
   const comments = await response.json();
-  
-  document.getElementById('comment-container').innerText = comments;
+  console.log(comments);
+  const commentSection = document.getElementById('comment-list');
+  comments.forEach((comment) => {
+      commentSection.appendChild(createCommentElement(comment));
+  })
+}
+
+function createCommentElement(comment){
+    const commentElement = document.createElement("li");
+    const textElement = document.createElement("span");
+    textElement.innerText = comment.text;
+    commentElement.appendChild(textElement);
+    return commentElement;
 }
 
 
