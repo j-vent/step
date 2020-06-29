@@ -6,6 +6,12 @@
   width: 650px;
 }
 
+.foodcontent {
+  margin-left: auto;
+  margin-right: auto;
+  width: 980px;
+}
+
 #greeting-container {
   margin-top: 20px;
 }
@@ -40,6 +46,11 @@ h3{
 
 .pfp{
   border-radius: 50%;
+}
+
+.shefpic{
+  width:250px;
+  height:250px;
 }
 
 .center {
@@ -92,7 +103,7 @@ p.ctr {
   font-size: 20px;
 }
 
-.blankspace{
+#blankspace{
     height:800px;
 }
 
@@ -105,7 +116,27 @@ p.ctr {
   margin: 0 auto;
 }
 .zoom:hover{
-  transform: scale(1.25)
+    transform: scale(1.25)
+}
+
+#imagegrid{
+  display: grid;
+  grid-gap: 5px;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+
+}
+
+.foodpic {
+  width:min(200px,auto);
+  height: 300px;
+  object-fit: cover;
+  overflow:hidden;
+  
+}
+
+.foodpic:hover{
+  opacity:80%;
 }
 
 .projpic{
