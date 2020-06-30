@@ -37,20 +37,16 @@ window.addEventListener("scroll", function() {
   }
 });
 
-async function getComments() {
-  console.log("in get comments");
+function getComments() {
   const numComments = document.getElementById("numComments").value;
-  const response = await fetch('/data?numComments='+ numComments);
-  const comments = await response.json();
-  
-  const commentSection = document.getElementById('comment-list');
-  commentSection.innerText = ""; // clear old comments 
- 
-  console.log(comments);
-  console.log(numComments);
-  
-  comments.forEach((comment) => {
+  fetch('/data?numComments='+ numComments)
+  .then(response => response.json())
+  .then((comments) => {
+    const commentSection = document.getElementById('comment-list');
+    commentSection.innerText = ""; // clear old comments 
+    comments.forEach((comment) => {
       commentSection.appendChild(createCommentElement(comment));
+    });
   });
 }
 
@@ -62,25 +58,22 @@ function createCommentElement(comment){
     return commentElement;
 }
 
-async function deleteComments(){
-  console.log("in delete comments");
-  const response = await fetch('/data?numComments=10');
-  const comments = await response.json();
-  comments.forEach((comment) => {
-    console.log("comment id");
-    console.log(comment.id);
+function deleteComments(){
+  fetch('/data?numComments=10')
+  .then(response => response.json())
+  .then((comments) =>{
+    comments.forEach((comment) => {
     deleteComment(comment);
-  });
-  
-}
+    });
 
-async function deleteComment(comment) {
-  console.log("in delete comment");
+  }); 
+ }
+function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append("id", comment.id);
 
-  const response = await fetch('/delete-comment', {method: 'POST', body: params})
-  await getComments();
-
+  fetch('/delete-comment', {method: 'POST', body: params})
+  .then(() => getComments());
+  
 
 }

@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
+/** Servlet that returns comments and updates the datastore with comments*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
   
@@ -58,17 +58,9 @@ public class DataServlet extends HttpServlet {
             break;
         } 
     }
-    // response.sendRedirect("/index.html");
-    
     Gson gson = new Gson();
-    
-    //String json=gson.toJson(comments);
     response.setContentType("application/json;");
-    //response.getWriter().println(json);
     response.getWriter().println(gson.toJson(comments));
-
-    // response.sendRedirect("/index.html");
- 
   }
 
   @Override
@@ -81,7 +73,6 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("timestamp", timestamp);
 
     datastore.put(commentEntity);
-    response.sendRedirect("/index.html");
-    
+    response.sendRedirect("/index.html"); 
   }
 }

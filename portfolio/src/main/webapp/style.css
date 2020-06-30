@@ -176,3 +176,7 @@ li{
     height: 150px;
     width: 50%;
 }
+
+.commentbtn{
+    float:right;
+}

@@ -34,11 +34,8 @@ public class DeleteCommentServlet extends HttpServlet {
     long id = Long.parseLong(request.getParameter("id"));
 
     Key commentEntityKey = KeyFactory.createKey("Comment", id);
-    System.out.println("Do Post");
-    System.out.println(commentEntityKey);
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.delete(commentEntityKey);
-    System.out.println("Deleted");
-
+    
   }
 }
