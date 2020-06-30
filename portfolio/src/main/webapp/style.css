@@ -50,7 +50,7 @@ h3{
 
 .shefpic{
   width:250px;
-  height:250px;
+  height:350px;
 }
 
 .center {
@@ -145,7 +145,38 @@ p.ctr {
   width:325px;
 }
 
-#chatbtn{
-  float:right; 
-  margin-bottom:20px;
+#bunny{
+  height:50px;
+  width:80px;
+}
+
+.blogimg{
+  height: 100px;
+  width:150px;
+}
+
+.readbtn{
+  margin-left:14px;
+}
+
+ul{
+  list-style: none;
+}
+
+li{
+  font-family: Raleway, sans-serif;
+  font-size: 18px;
+}
+
+#commentspace{
+  height:300px;
+}
+
+#textbox{
+    height: 150px;
+    width: 50%;
+}
+
+.commentbtn{
+    float:right;
 }

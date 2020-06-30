@@ -37,3 +37,43 @@ window.addEventListener("scroll", function() {
   }
 });
 
+function getComments() {
+  const numComments = document.getElementById("numComments").value;
+  fetch('/data?numComments='+ numComments)
+  .then(response => response.json())
+  .then((comments) => {
+    const commentSection = document.getElementById('comment-list');
+    commentSection.innerText = ""; // clear old comments 
+    comments.forEach((comment) => {
+      commentSection.appendChild(createCommentElement(comment));
+    });
+  });
+}
+
+function createCommentElement(comment){
+    const commentElement = document.createElement("li");
+    const textElement = document.createElement("span");
+    textElement.innerText = comment.text;
+    commentElement.appendChild(textElement);
+    return commentElement;
+}
+
+function deleteComments(){
+  fetch('/data?numComments=10')
+  .then(response => response.json())
+  .then((comments) =>{
+    comments.forEach((comment) => {
+    deleteComment(comment);
+    });
+
+  }); 
+ }
+function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append("id", comment.id);
+
+  fetch('/delete-comment', {method: 'POST', body: params})
+  .then(() => getComments());
+  
+
+}

@@ -46,7 +46,7 @@
         <div class="blogpost">
           <p>I don't have any pets of my own, though I do really like bunnies. 
             Here's a photo of a cute rabbit that you can pet (by clicking):</p>
-           <img id="bunny" onclick="bunnymsg()" style="height: 50px;width:80px;" src="img/bunny.jpg" alt="white rabbit"/>
+           <img id="bunny" onclick="bunnymsg()" src="img/bunny.jpg" alt="white rabbit"/>
            <div id="bun_msg" style=" color:darkslategrey;"></div>
         </div>
     </div>
@@ -114,27 +114,35 @@
           <h3>Coursera Machine Learning Course</h3>
           <p class="blogtext">I am currently on Week 6 of Andrew Ng's famous introductory course on machine learning. This week is about 
             getting proper diagnostics and how to best change parameters to get the best possible fit in your models.  </p>
-          <img src="img/bot.png"/>
+          <img class="blogimg" src="img/bot.png"/>
         </div>
-        <a href="blogs/blog0.html" class="btn btn-sm btn-outline-secondary" style=
-         "margin-left:14px;">Read More</a>
+        <a href="blogs/blog0.html" class="readbtn btn btn-sm btn-outline-secondary">Read More</a>
         <br/>
         <br/>
        <div class="blogpost" id="blog1">
           <h3>My Portfolio Site </h3>
           <p class="blogtext">I am currently working on my portfolio page, the page you're currently on right now!</p>
-          <img src="img/site.png" style="height: 100px;width:150px;"/>
+          <img class="blogimg" src="img/site.png" />
         </div>
-        <a href="blogs/blog1.html" class="btn btn-sm btn-outline-secondary" style=
-         "margin-left:14px;">Read More</a> 
+        <a href="blogs/blog1.html" class="readbtn btn btn-sm btn-outline-secondary">Read More</a> 
     </div>
+
 
     <div id="blankspace"></div> <!-- necessary to allow for scrolling to blog section" -->
 
-    <footer>
-      <button onclick="msg()" id="chatbtn" class=" fa fa-commenting-o fa-4x"></button>
-    </footer>
-
+    <div class="content">
+        <form method="POST" action="/data">
+            <p class="center" >Leave Justine a comment:</p>
+            <input class="center" id="textbox" name="text" type="text">
+            <input class="commentbtn btn btn-sm btn-outline-primary" type="submit"/>
+        </form>
+        <br/>
+        <label class="center" for="numComments">How many comments would you like to see?</label>
+        <input class="center" type="number" id="numComments" name="numComments" min="0" max="10" onChange="getComments()">
+        <ul class="center" id="comment-list"></ul>
+        <button onclick="deleteComments()"  class=" btn btn-sm btn-outline-secondary">Delete All Comments</button>
+    </div>
+    <div id="commentspace"></div> 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
     <script src="https://pingendo.com/assets/bootstrap/bootstrap-4.0.0-alpha.6.min.js"></script>
