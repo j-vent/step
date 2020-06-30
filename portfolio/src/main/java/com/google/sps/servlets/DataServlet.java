@@ -39,9 +39,6 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     int numComments = Integer.valueOf(request.getParameter("numComments"));
-    System.out.println("num comments:");
-    System.out.println(numComments);
-    // int numComments = 2;
     Query query = new Query("Comment"); // get by date posted
 
     PreparedQuery results = datastore.prepare(query);
@@ -50,12 +47,12 @@ public class DataServlet extends HttpServlet {
     
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
+          long id = entity.getKey().getId();
           String text = (String) entity.getProperty("text");
-          Comment comment = new Comment(text);
+          long timestamp = (long) entity.getProperty("timestamp");
+
+          Comment comment = new Comment(id,text,timestamp);
           comments.add(comment);
-          System.out.println("COMMMENT");
-          System.out.println(comments.size());
-          
         }
         else{
             break;
@@ -77,9 +74,12 @@ public class DataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     String text = request.getParameter("text");
-    
+    long timestamp = System.currentTimeMillis();
+
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text",text);
+    commentEntity.setProperty("timestamp", timestamp);
+
     datastore.put(commentEntity);
     response.sendRedirect("/index.html");
     

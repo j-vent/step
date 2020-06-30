@@ -38,25 +38,19 @@ window.addEventListener("scroll", function() {
 });
 
 async function getComments() {
-
   const numComments = document.getElementById("numComments").value;
   const response = await fetch('/data?numComments='+ numComments);
   const comments = await response.json();
   
   const commentSection = document.getElementById('comment-list');
   commentSection.innerText = ""; // clear old comments 
-  
-  console.log(comments);
-  console.log(numComments);
+  console.log("cleared section");
+  // console.log(comments);
+  // console.log(numComments);
   
   comments.forEach((comment) => {
       commentSection.appendChild(createCommentElement(comment));
   });
-  /*
-  for(var i=0; i < numComments; i++){
-      commentSection.appendChild(createCommentElement(comments[i]));
-  }
-  */
 }
 
 function createCommentElement(comment){
@@ -67,4 +61,21 @@ function createCommentElement(comment){
     return commentElement;
 }
 
+async function deleteComments(){
+  console.log("in delete comments");
+  const response = await fetch('/data?numComments=10');
+  const comments = await response.json();
+  comments.forEach((comment) => {
+    console.log("comment id");
+    console.log(comment.id);
+    deleteComment(comment);
+  });
+  
+}
 
+function deleteComment(comment) {
+  const params = new URLSearchParams();
+  params.append("id", comment.id);
+  const response = fetch('/delete-comment', {method: 'POST', body: params}).then(getComments());
+
+}
