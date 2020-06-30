@@ -38,15 +38,16 @@ window.addEventListener("scroll", function() {
 });
 
 async function getComments() {
+  console.log("in get comments");
   const numComments = document.getElementById("numComments").value;
   const response = await fetch('/data?numComments='+ numComments);
   const comments = await response.json();
   
   const commentSection = document.getElementById('comment-list');
   commentSection.innerText = ""; // clear old comments 
-  console.log("cleared section");
-  // console.log(comments);
-  // console.log(numComments);
+ 
+  console.log(comments);
+  console.log(numComments);
   
   comments.forEach((comment) => {
       commentSection.appendChild(createCommentElement(comment));
@@ -73,9 +74,13 @@ async function deleteComments(){
   
 }
 
-function deleteComment(comment) {
+async function deleteComment(comment) {
+  console.log("in delete comment");
   const params = new URLSearchParams();
   params.append("id", comment.id);
-  const response = fetch('/delete-comment', {method: 'POST', body: params}).then(getComments());
+
+  const response = await fetch('/delete-comment', {method: 'POST', body: params})
+  await getComments();
+
 
 }
