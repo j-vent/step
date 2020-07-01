@@ -83,9 +83,16 @@ function getLogin(){
   fetch('/login')
   .then(response => response.json())
   .then(status =>{
+      console.log(status.isLoggedIn);
       if(status.isLoggedIn){
-          console.log("true");
           document.getElementById("commentSection").style.display = 'block';
+      }
+      else{
+          console.log(status.loginUrl);
+          var loginbtn = document.getElementById("loginbtn");
+          // TO DO: try not to hardcode, just the path
+          loginbtn.style.display="block";
+          loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/login?continue=%2F";
       }
   });
 }

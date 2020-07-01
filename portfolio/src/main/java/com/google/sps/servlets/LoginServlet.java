@@ -32,16 +32,22 @@ public class LoginServlet extends HttpServlet{
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
       
       boolean isLoggedIn;
+      String loginUrl="";
       UserService userService = UserServiceFactory.getUserService();
       
       if(!userService.isUserLoggedIn()){
         isLoggedIn =false;
+        String urlToRedirectToAfterUserLogsIn = "/";
+        loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+
+        // response.getWriter().println("<p>Hello stranger.</p>");
+        // response.getWriter().println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
       }
       else{
         isLoggedIn =true;
       }
       // response.getWriter().println("<h1>isLoggedIn</h1>");
-      Status status = new Status(isLoggedIn);
+      Status status = new Status(isLoggedIn,loginUrl);
       Gson gson = new Gson();
       response.setContentType("application/json;");
       response.getWriter().println(gson.toJson(status));

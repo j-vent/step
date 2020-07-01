@@ -180,6 +180,11 @@ li{
 .commentbtn{
     float:right;
 }
+
 #commentSection{
+  display:none;
+}
+
+#loginbtn{
   display:none;
 }
