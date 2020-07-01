@@ -180,3 +180,6 @@ li{
 .commentbtn{
     float:right;
 }
+#commentSection{
+  display:none;
+}

@@ -42,6 +42,8 @@ function getComments() {
   fetch('/data?numComments='+ numComments)
   .then(response => response.json())
   .then((comments) => {
+    console.log("comment");
+    console.log(comments);
     const commentSection = document.getElementById('comment-list');
     commentSection.innerText = ""; // clear old comments 
     comments.forEach((comment) => {
@@ -68,12 +70,22 @@ function deleteComments(){
 
   }); 
  }
+
 function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append("id", comment.id);
 
   fetch('/delete-comment', {method: 'POST', body: params})
   .then(() => getComments());
-  
+}
 
+function getLogin(){
+  fetch('/login')
+  .then(response => response.json())
+  .then(status =>{
+      if(status.isLoggedIn){
+          console.log("true");
+          document.getElementById("commentSection").style.display = 'block';
+      }
+  });
 }
