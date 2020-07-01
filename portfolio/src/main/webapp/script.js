@@ -42,8 +42,6 @@ function getComments() {
   fetch('/data?numComments='+ numComments)
   .then(response => response.json())
   .then((comments) => {
-    console.log("comment");
-    console.log(comments);
     const commentSection = document.getElementById('comment-list');
     commentSection.innerText = ""; // clear old comments 
     comments.forEach((comment) => {
@@ -55,8 +53,13 @@ function getComments() {
 function createCommentElement(comment){
     const commentElement = document.createElement("li");
     const textElement = document.createElement("span");
+    const userElement = document.createElement("div");
+    textElement.className = "commenttxt";
+    userElement.className = "emailtxt";
     textElement.innerText = comment.text;
+    userElement.innerText = "-" + comment.email;
     commentElement.appendChild(textElement);
+    commentElement.appendChild(userElement);
     return commentElement;
 }
 
@@ -85,14 +88,17 @@ function getLogin(){
   .then(status =>{
       console.log(status.isLoggedIn);
       if(status.isLoggedIn){
-          document.getElementById("commentSection").style.display = 'block';
+          document.getElementById("commentSection").style.display="block";
+          var logoutbtn = document.getElementById("logoutbtn");
+          logoutbtn.style.display="block";
+          // TO DO: try not to hardcode, just the path
+          logoutbtn.href =" https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/logout?continue=%2F"
       }
       else{
           console.log(status.loginUrl);
           var loginbtn = document.getElementById("loginbtn");
-          // TO DO: try not to hardcode, just the path
           loginbtn.style.display="block";
-          loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/login?continue=%2F";
+          loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/" + status.loginUrl;
       }
   });
 }

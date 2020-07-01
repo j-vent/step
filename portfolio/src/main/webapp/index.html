@@ -10,8 +10,7 @@
     <link rel="stylesheet" href="style.css">
   </head>
   
-  <!--<body onload="getLogin()"> -->
-  <body>
+  <body onload="getLogin()"> 
 
     <header>
       <h1 class="center">Justine Ventura</h1>
@@ -135,15 +134,22 @@
         <form method="POST" action="/data" id = "commentSection">
             <p class="center" >Leave Justine a comment:</p>
             <input class="center" id="textbox" name="text" type="text">
-            <input class="commentbtn btn btn-sm btn-outline-primary" type="submit"/>
+            <div class="center">
+              <input class="commentbtn btn btn-sm btn-outline-primary" type="submit"/>
+            </div>
         </form>
+        <br/>
         <br/>
         <label class="center" for="numComments">How many comments would you like to see?</label>
         <input class="center" type="number" id="numComments" name="numComments" min="0" max="10" onChange="getComments()">
         <ul class="center" id="comment-list"></ul>
-        <button onclick="deleteComments()"  class=" btn btn-sm btn-outline-secondary">Delete All Comments</button>
-        <button onclick="getLogin()"  class=" btn btn-sm btn-outline-secondary">Check Login Info</button>
-        <a id ="loginbtn" class=" btn btn-sm btn-outline-secondary">Login</a>
+        <div class="center">
+          <button onclick="deleteComments()"  class="btn btn-sm btn-outline-secondary">Delete All Comments</button>
+          <!--<button onclick="getLogin()"  class=" btn btn-sm btn-outline-secondary">Check Login Info</button>-->
+          <a id ="loginbtn" class=" btn btn-sm btn-outline-secondary">Login</a>
+          <a id ="logoutbtn" class=" btn btn-sm btn-outline-secondary">Logout</a>
+        </div>
+        
     </div>
     <div id="commentspace"></div> 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
