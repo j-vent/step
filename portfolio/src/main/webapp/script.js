@@ -57,7 +57,7 @@ function createCommentElement(comment){
     textElement.className = "commenttxt";
     userElement.className = "emailtxt";
     textElement.innerText = comment.text;
-    userElement.innerText = "-" + comment.email;
+    userElement.innerText = "-" + comment.nickname;
     commentElement.appendChild(textElement);
     commentElement.appendChild(userElement);
     return commentElement;
@@ -83,9 +83,11 @@ function deleteComment(comment) {
 }
 
 function getLogin(){
+  console.log("heyo");
   fetch('/login')
   .then(response => response.json())
   .then(status =>{
+      console.log("in js resp");
       console.log(status.isLoggedIn);
       if(status.isLoggedIn){
           document.getElementById("commentSection").style.display="block";

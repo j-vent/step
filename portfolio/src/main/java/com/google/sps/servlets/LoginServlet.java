@@ -30,25 +30,48 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginServlet extends HttpServlet{
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
-      
       boolean isLoggedIn;
       String  url="";
       UserService userService = UserServiceFactory.getUserService();
-      
       if(!userService.isUserLoggedIn()){
         isLoggedIn =false;
-        String urlToRedirectToAfterUserLogsIn = "/";
+        String urlToRedirectToAfterUserLogsIn = "/nickname";
         url = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
       }
       else{
         isLoggedIn =true;
       }
-      // response.getWriter().println("<h1>isLoggedIn</h1>");
-      Status status = new Status(isLoggedIn,url);
+    /**
+      String nickname = getUserNickname(userService.getCurrentUser().getUserId());
+      if (nickname == null) {
+        response.sendRedirect("/nickname");
+        // return;
+      }
+      **/
+      
+      Status status = new Status(userService.isUserLoggedIn(),url);
       Gson gson = new Gson();
       response.setContentType("application/json;");
       response.getWriter().println(gson.toJson(status));
+      System.out.println("sent back to js");
+      
+      
     }
+
+     /** Returns the nickname of the user with id, or null if the user has not set a nickname. */
+    private String getUserNickname(String id) {
+        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+        Query query =
+            new Query("UserInfo")
+                .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
+        PreparedQuery results = datastore.prepare(query);
+        Entity entity = results.asSingleEntity();
+        if (entity == null) {
+        return null;
+        }
+        String nickname = (String) entity.getProperty("nickname");
+        return nickname;
+  }
 
 }
 
