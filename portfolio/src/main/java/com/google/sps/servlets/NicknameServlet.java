@@ -41,18 +41,13 @@ public class NicknameServlet extends HttpServlet {
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
       String nickname = getUserNickname(userService.getCurrentUser().getUserId());
-      out.println("<p>Set your nickname here:</p>");
-      out.println("<form method=\"POST\" action=\"/nickname\">");
-      out.println("<input name=\"nickname\" value=\"" + nickname + "\" />");
-      out.println("<br/>");
-      out.println("<button>Submit</button>");
-      out.println("</form>");
+      response.sendRedirect("/nickname.html");
     } else {
       String loginUrl = userService.createLoginURL("/nickname");
       out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
     }
   }
-  // does this function overwrite the doPost in dataservlet??
+
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     UserService userService = UserServiceFactory.getUserService();
@@ -60,14 +55,11 @@ public class NicknameServlet extends HttpServlet {
       response.sendRedirect("/nickname");
       return;
     }
-
     String nickname = request.getParameter("nickname");
     String id = userService.getCurrentUser().getUserId();
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    
-    System.out.print("nickname: ");
-    System.out.println(nickname);
+
     Entity entity = new Entity("UserInfo", id);
     entity.setProperty("id", id);
     entity.setProperty("nickname", nickname);

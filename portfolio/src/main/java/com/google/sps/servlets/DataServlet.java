@@ -40,8 +40,7 @@ public class DataServlet extends HttpServlet {
   UserService userService = UserServiceFactory.getUserService();
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-       System.out.println("data doGet");
-    int numComments = Integer.valueOf(request.getParameter("numComments"));
+    int numComments = Integer.parseInt(request.getParameter("numComments"));
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); // sort by time posted
 
     PreparedQuery results = datastore.prepare(query);
