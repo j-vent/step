@@ -41,7 +41,7 @@ function getComments() {
   console.log(document.getElementById("languages").value);
   const language=document.getElementById("languages").value;
   const numComments = document.getElementById("numComments").value;
-  fetch('/data?numComments='+ numComments+"&language=" + language)
+  fetch('/data?numComments='+ numComments+ '&language=' + language)
   .then(response => response.json())
   .then((comments) => {
     const commentSection = document.getElementById('comment-list');

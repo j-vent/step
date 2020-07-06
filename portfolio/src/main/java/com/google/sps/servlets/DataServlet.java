@@ -22,6 +22,9 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import java.io.IOException;
@@ -54,11 +57,21 @@ public class DataServlet extends HttpServlet {
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
           long id = entity.getKey().getId();
+
+          // Get the request parameters.
+          // String originalText = request.getParameter("text");
+          // String languageCode = request.getParameter("languageCode");
           String text = (String) entity.getProperty("text");
+          // Do the translation.
+          Translate translate = TranslateOptions.getDefaultInstance().getService();
+          Translation translation =
+            translate.translate(text, Translate.TranslateOption.targetLanguage(language));
+          String translatedText = translation.getTranslatedText();
+          
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
           String nickname= (String) entity.getProperty("nickname");
-          Comment comment = new Comment(id,text,timestamp,email, nickname);
+          Comment comment = new Comment(id,translatedText,timestamp,email, nickname);
           comments.add(comment);
         }
         else{
@@ -66,8 +79,10 @@ public class DataServlet extends HttpServlet {
         } 
     }
     Gson gson = new Gson();
-    response.setContentType("application/json;");
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
     response.getWriter().println(gson.toJson(comments));
+    
   }
 
   @Override
