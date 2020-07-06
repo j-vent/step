@@ -69,7 +69,6 @@ public class DataServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-      System.out.println("data doPost");
     String text = request.getParameter("text");
     long timestamp = System.currentTimeMillis();
     String email = userService.getCurrentUser().getEmail();

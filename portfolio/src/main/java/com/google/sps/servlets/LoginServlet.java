@@ -41,21 +41,10 @@ public class LoginServlet extends HttpServlet{
       else{
         isLoggedIn =true;
       }
-    /**
-      String nickname = getUserNickname(userService.getCurrentUser().getUserId());
-      if (nickname == null) {
-        response.sendRedirect("/nickname");
-        // return;
-      }
-      **/
-      
       Status status = new Status(userService.isUserLoggedIn(),url);
       Gson gson = new Gson();
       response.setContentType("application/json;");
       response.getWriter().println(gson.toJson(status));
-      System.out.println("sent back to js");
-      
-      
     }
 
      /** Returns the nickname of the user with id, or null if the user has not set a nickname. */

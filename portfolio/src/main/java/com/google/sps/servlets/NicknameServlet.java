@@ -34,14 +34,12 @@ public class NicknameServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("in doGet");
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.println("<h1>Set Nickname</h1>");
 
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
-        System.out.println("in if");
       String nickname = getUserNickname(userService.getCurrentUser().getUserId());
       out.println("<p>Set your nickname here:</p>");
       out.println("<form method=\"POST\" action=\"/nickname\">");
@@ -57,7 +55,6 @@ public class NicknameServlet extends HttpServlet {
   // does this function overwrite the doPost in dataservlet??
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    System.out.println("in doPost");
     UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/nickname");

@@ -83,11 +83,9 @@ function deleteComment(comment) {
 }
 
 function getLogin(){
-  console.log("heyo");
   fetch('/login')
   .then(response => response.json())
   .then(status =>{
-      console.log("in js resp");
       console.log(status.isLoggedIn);
       if(status.isLoggedIn){
           document.getElementById("commentSection").style.display="block";
