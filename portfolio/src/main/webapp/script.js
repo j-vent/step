@@ -38,6 +38,7 @@ window.addEventListener("scroll", function() {
 });
 
 function getComments() {
+  console.log(document.getElementById("languages").value);
   const numComments = document.getElementById("numComments").value;
   fetch('/data?numComments='+ numComments)
   .then(response => response.json())
@@ -92,13 +93,15 @@ function getLogin(){
           var logoutbtn = document.getElementById("logoutbtn");
           logoutbtn.style.display="block";
           // TO DO: try not to hardcode, just the path
-          logoutbtn.href =" https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/logout?continue=%2F"
+          // logoutbtn.href =" https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/logout?continue=%2F"
+          logoutbtn.href =status.loginUrl;
       }
       else{
           console.log(status.loginUrl);
           var loginbtn = document.getElementById("loginbtn");
           loginbtn.style.display="block";
-          loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/" + status.loginUrl;
+          // loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/" + status.loginUrl;
+          loginbtn.href =status.loginUrl;
       }
   });
 }

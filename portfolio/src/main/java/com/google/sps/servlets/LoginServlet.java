@@ -33,6 +33,7 @@ public class LoginServlet extends HttpServlet{
       boolean isLoggedIn;
       String  url="";
       UserService userService = UserServiceFactory.getUserService();
+
       if(!userService.isUserLoggedIn()){
         isLoggedIn =false;
         String urlToRedirectToAfterUserLogsIn = "/nickname";
@@ -40,6 +41,8 @@ public class LoginServlet extends HttpServlet{
       }
       else{
         isLoggedIn =true;
+        String urlToRedirectToAfterUserLogsOut = "/index.html";
+        url = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       }
       Status status = new Status(userService.isUserLoggedIn(),url);
       Gson gson = new Gson();
