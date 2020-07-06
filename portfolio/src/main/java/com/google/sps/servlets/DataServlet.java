@@ -22,6 +22,9 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.language.v1.Document;
+import com.google.cloud.language.v1.LanguageServiceClient;
+import com.google.cloud.language.v1.Sentiment;
 import com.google.cloud.translate.Translate;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
@@ -38,12 +41,11 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns comments and updates the datastore with comments*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   UserService userService = UserServiceFactory.getUserService();
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    
+    System.out.println("in get");
     int numComments = Integer.valueOf(request.getParameter("numComments"));
     String language = request.getParameter("language");
     System.out.println("language: ");
@@ -68,7 +70,8 @@ public class DataServlet extends HttpServlet {
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
           String nickname= (String) entity.getProperty("nickname");
-          Comment comment = new Comment(id,translatedText,timestamp,email, nickname);
+          float score = (float) entity.getProperty("score");
+          Comment comment = new Comment(id,translatedText,timestamp,email, nickname, score);
           comments.add(comment);
         }
         else{
@@ -95,7 +98,13 @@ public class DataServlet extends HttpServlet {
     commentEntity.setProperty("timestamp", timestamp);
     commentEntity.setProperty("email",email);
     commentEntity.setProperty("nickname",nickname);
-
+    Document doc = Document.newBuilder().setContent(text).setType(Document.Type.PLAIN_TEXT).build();
+    LanguageServiceClient languageService = LanguageServiceClient.create();
+    Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
+    float score = (float) sentiment.getScore();
+    languageService.close();
+    // commentEntity.setProperty("score",score);
+    commentEntity.setProperty("score",score);
     datastore.put(commentEntity);
     response.sendRedirect("/index.html"); 
   }
