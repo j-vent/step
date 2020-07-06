@@ -57,11 +57,8 @@ public class DataServlet extends HttpServlet {
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
           long id = entity.getKey().getId();
-
-          // Get the request parameters.
-          // String originalText = request.getParameter("text");
-          // String languageCode = request.getParameter("languageCode");
           String text = (String) entity.getProperty("text");
+
           // Do the translation.
           Translate translate = TranslateOptions.getDefaultInstance().getService();
           Translation translation =
