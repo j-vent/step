@@ -122,7 +122,7 @@
        <div class="blogpost" id="blog1">
           <h3>My Portfolio Site </h3>
           <p class="blogtext">I am currently working on my portfolio page, the page you're currently on right now!</p>
-          <img class="blogimg" src="img/site.png" />
+          <img class="blogimg" src="img/site.png"/>
         </div>
         <a href="blogs/blog1.html" class="readbtn btn btn-sm btn-outline-secondary">Read More</a> 
     </div>
@@ -141,11 +141,13 @@
         <br/>
         <br/>
         <label class="center" for="numComments">How many comments would you like to see?</label>
+        <br/>
         <input class="center" type="number" id="numComments" name="numComments" min="0" max="10" onChange="getComments()">
         <ul class="center" id="comment-list"></ul>
         <div class="center">
           <button onclick="deleteComments()"  class="btn btn-sm btn-outline-secondary">Delete All Comments</button>
           <!--<button onclick="getLogin()"  class=" btn btn-sm btn-outline-secondary">Check Login Info</button>-->
+          <br/>
           <a id ="loginbtn" class=" btn btn-sm btn-outline-secondary">Login</a>
           <a id ="logoutbtn" class=" btn btn-sm btn-outline-secondary">Logout</a>
         </div>
