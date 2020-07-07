@@ -47,10 +47,9 @@ function getComments() {
     const commentSection = document.getElementById('comment-list');
     commentSection.innerText = ""; // clear old comments 
     comments.forEach((comment) => {
-      commentSection.appendChild(createCommentElement(comment));
+    commentSection.appendChild(createCommentElement(comment)); 
     });
   });
-  console.log("done");
 }
 
 function createCommentElement(comment){
@@ -60,12 +59,14 @@ function createCommentElement(comment){
     const scoreElement = document.createElement("span");
     textElement.className = "commenttxt";
     userElement.className = "emailtxt";
+    scoreElement.className = "scoretxt";
     textElement.innerText = comment.text;
     userElement.innerText = "-" + comment.nickname;
     scoreElement.innerText = comment.score; 
     commentElement.appendChild(textElement);
-    commentElement.appendChild(userElement);
     commentElement.appendChild(scoreElement);
+    commentElement.appendChild(userElement);
+
     return commentElement;
 }
 

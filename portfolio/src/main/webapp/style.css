@@ -168,7 +168,7 @@ ul{
   font-size: 18px;
 }
 
-.emailtxt{
+.emailtxt, .scoretxt{
   font-family: Questrial;
   font-size: 12px;
   float: right;

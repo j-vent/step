@@ -22,9 +22,9 @@ public final class Comment {
   private final long timestamp;
   private final String email;
   private final String nickname;
-  private final float score;
+  private final double score;
 
-  public Comment(long id, String text, long timestamp, String email, String nickname, float score) {
+  public Comment(long id, String text, long timestamp, String email, String nickname,double score) {
     this.id = id;
     this.text = text;
     this.timestamp = timestamp;

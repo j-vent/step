@@ -55,7 +55,7 @@ public class DataServlet extends HttpServlet {
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments= new ArrayList<>();
-    
+    //double score;
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
           long id = entity.getKey().getId();
@@ -70,7 +70,7 @@ public class DataServlet extends HttpServlet {
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
           String nickname= (String) entity.getProperty("nickname");
-          float score = (float) entity.getProperty("score");
+          double score = (double) entity.getProperty("score");
           Comment comment = new Comment(id,translatedText,timestamp,email, nickname, score);
           comments.add(comment);
         }
@@ -82,7 +82,6 @@ public class DataServlet extends HttpServlet {
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().println(gson.toJson(comments));
-    
   }
 
   @Override
@@ -101,9 +100,9 @@ public class DataServlet extends HttpServlet {
     Document doc = Document.newBuilder().setContent(text).setType(Document.Type.PLAIN_TEXT).build();
     LanguageServiceClient languageService = LanguageServiceClient.create();
     Sentiment sentiment = languageService.analyzeSentiment(doc).getDocumentSentiment();
-    float score = (float) sentiment.getScore();
+    // float score = (float) sentiment.getScore(); // float type does not work 
+    double score = (double) sentiment.getScore();
     languageService.close();
-    // commentEntity.setProperty("score",score);
     commentEntity.setProperty("score",score);
     datastore.put(commentEntity);
     response.sendRedirect("/index.html"); 
