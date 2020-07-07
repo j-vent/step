@@ -163,9 +163,15 @@ ul{
   list-style: none;
 }
 
-li{
+.commenttxt{
   font-family: Raleway, sans-serif;
   font-size: 18px;
+}
+
+.emailtxt{
+  font-family: Questrial;
+  font-size: 12px;
+  float: right;
 }
 
 #commentspace{
@@ -179,4 +185,16 @@ li{
 
 .commentbtn{
     float:right;
+}
+
+#commentSection{
+  display:none;
+}
+
+#loginbtn{
+  display:none;
+}
+
+#logoutbtn{
+  display:none;
 }

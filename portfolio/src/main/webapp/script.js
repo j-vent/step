@@ -53,8 +53,13 @@ function getComments() {
 function createCommentElement(comment){
     const commentElement = document.createElement("li");
     const textElement = document.createElement("span");
+    const userElement = document.createElement("div");
+    textElement.className = "commenttxt";
+    userElement.className = "emailtxt";
     textElement.innerText = comment.text;
+    userElement.innerText = "-" + comment.nickname;
     commentElement.appendChild(textElement);
+    commentElement.appendChild(userElement);
     return commentElement;
 }
 
@@ -68,12 +73,32 @@ function deleteComments(){
 
   }); 
  }
+
 function deleteComment(comment) {
   const params = new URLSearchParams();
   params.append("id", comment.id);
 
   fetch('/delete-comment', {method: 'POST', body: params})
   .then(() => getComments());
-  
+}
 
+function getLogin(){
+  fetch('/login')
+  .then(response => response.json())
+  .then(status =>{
+      console.log(status.isLoggedIn);
+      if(status.isLoggedIn){
+          document.getElementById("commentSection").style.display="block";
+          var logoutbtn = document.getElementById("logoutbtn");
+          logoutbtn.style.display="block";
+          // TO DO: try not to hardcode, just the path
+          logoutbtn.href =" https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/logout?continue=%2F"
+      }
+      else{
+          console.log(status.loginUrl);
+          var loginbtn = document.getElementById("loginbtn");
+          loginbtn.style.display="block";
+          loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/" + status.loginUrl;
+      }
+  });
 }
