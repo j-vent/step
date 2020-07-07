@@ -46,8 +46,6 @@ public class DataServlet extends HttpServlet {
     
     int numComments = Integer.valueOf(request.getParameter("numComments"));
     String language = request.getParameter("language");
-    System.out.println("language: ");
-    System.out.println(language);
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); // sort by time posted
 
     PreparedQuery results = datastore.prepare(query);
@@ -67,7 +65,10 @@ public class DataServlet extends HttpServlet {
           
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
-          String nickname= (String) entity.getProperty("nickname");
+          String nickname = (String) entity.getProperty("nickname");
+          if(nickname == null || nickname == ""){
+              nickname = email;
+          }
           Comment comment = new Comment(id,translatedText,timestamp,email, nickname);
           comments.add(comment);
         }
