@@ -53,7 +53,10 @@ public class DataServlet extends HttpServlet {
           String text = (String) entity.getProperty("text");
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
-          String nickname= (String) entity.getProperty("nickname");
+          String nickname = (String) entity.getProperty("nickname");
+          if(nickname == null){
+              nickname = email;
+          }
           Comment comment = new Comment(id,text,timestamp,email, nickname);
           comments.add(comment);
         }
