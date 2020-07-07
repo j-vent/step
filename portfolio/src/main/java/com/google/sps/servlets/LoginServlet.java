@@ -31,15 +31,15 @@ public class LoginServlet extends HttpServlet{
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
       boolean isLoggedIn;
-      String  url="";
+      String  url = "";
       UserService userService = UserServiceFactory.getUserService();
       if(!userService.isUserLoggedIn()){
-        isLoggedIn =false;
+        isLoggedIn = false;
         String urlToRedirectToAfterUserLogsIn = "/nickname";
         url = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
       }
       else{
-        isLoggedIn =true;
+        isLoggedIn = true;
       }
       Status status = new Status(userService.isUserLoggedIn(),url);
       Gson gson = new Gson();
