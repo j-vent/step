@@ -23,6 +23,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.Translate.TranslateOption;
 import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
@@ -50,6 +51,7 @@ public class DataServlet extends HttpServlet {
     
     int numComments = Integer.valueOf(request.getParameter("numComments"));
     String language = request.getParameter("language");
+
     // sort by time posted
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); 
     PreparedQuery results = datastore.prepare(query);
@@ -57,7 +59,8 @@ public class DataServlet extends HttpServlet {
     List<Comment> comments= new ArrayList<>();
 
     Translate translate = TranslateOptions.getDefaultInstance().getService();
-    
+    TranslateOption lang = Translate.TranslateOption.targetLanguage(language);
+
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
           long id = entity.getKey().getId();
@@ -65,7 +68,7 @@ public class DataServlet extends HttpServlet {
 
           // Do the translation.
           Translation translation =
-            translate.translate(text, Translate.TranslateOption.targetLanguage(language));
+            translate.translate(text, lang);
           String translatedText = translation.getTranslatedText();
           
           long timestamp = (long) entity.getProperty("timestamp");
@@ -92,6 +95,7 @@ public class DataServlet extends HttpServlet {
     long timestamp = System.currentTimeMillis();
     String email = userService.getCurrentUser().getEmail();
     String nickname = Nickname.getUserNickname(userService.getCurrentUser().getUserId());
+    
     if(nickname == ""){
         nickname = null;
     }

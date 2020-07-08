@@ -31,6 +31,9 @@ public class LoginServlet extends HttpServlet{
 
     private final UserService userService = UserServiceFactory.getUserService();
     private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    private static final String urlToRedirectToAfterUserLogsIn = "/nickname";
+    private static final String urlToRedirectToAfterUserLogsOut = "/index.html";
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
       boolean isLoggedIn;
@@ -38,12 +41,10 @@ public class LoginServlet extends HttpServlet{
 
       if(!userService.isUserLoggedIn()){
         isLoggedIn = false;
-        String urlToRedirectToAfterUserLogsIn = "/nickname";
         url = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
       }
       else{
         isLoggedIn =true;
-        String urlToRedirectToAfterUserLogsOut = "/index.html";
         url = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
       }
       Status status = new Status(userService.isUserLoggedIn(),url);
