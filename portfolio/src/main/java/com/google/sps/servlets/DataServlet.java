@@ -40,15 +40,18 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns comments and updates the datastore with comments*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  
+    
+  private final Gson gson = new Gson();
   DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
   UserService userService = UserServiceFactory.getUserService();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     
     int numComments = Integer.valueOf(request.getParameter("numComments"));
     String language = request.getParameter("language");
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); // sort by time posted
+    // sort by time posted
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); 
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments= new ArrayList<>();
@@ -78,11 +81,9 @@ public class DataServlet extends HttpServlet {
             break;
         } 
     }
-    Gson gson = new Gson();
     response.setContentType("application/json");
     response.setCharacterEncoding("UTF-8");
     response.getWriter().println(gson.toJson(comments));
-    
   }
 
   @Override
@@ -104,21 +105,4 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
     response.sendRedirect("/index.html"); 
   }
-    
-  /** Returns the nickname of the user with id, or null if the user has not set a nickname. */
-  /**
-  private String getUserNickname(String id) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query =
-        new Query("UserInfo")
-            .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return null;
-    }
-    String nickname = (String) entity.getProperty("nickname");
-    return nickname;
-  }
-  **/
 }

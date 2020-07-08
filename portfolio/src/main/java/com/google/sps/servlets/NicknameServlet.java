@@ -70,5 +70,4 @@ public class NicknameServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  
 }
