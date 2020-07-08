@@ -38,10 +38,11 @@ public class NicknameServlet extends HttpServlet {
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.println("<h1>Set Nickname</h1>");
-    Nickname nickobj = new Nickname();
+
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
-      String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
+      // String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
+      String nickname = Nickname.getUserNickname(userService.getCurrentUser().getUserId());
       response.sendRedirect("/nickname.html");
     } else {
       String loginUrl = userService.createLoginURL("/nickname");

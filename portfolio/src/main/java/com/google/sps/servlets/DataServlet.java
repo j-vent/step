@@ -91,8 +91,9 @@ public class DataServlet extends HttpServlet {
     String text = request.getParameter("text");
     long timestamp = System.currentTimeMillis();
     String email = userService.getCurrentUser().getEmail();
-    Nickname nickobj = new Nickname();
-    String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
+    // Nickname nickobj = new Nickname();
+    // String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
+    String nickname = Nickname.getUserNickname(userService.getCurrentUser().getUserId());
     if(nickname == ""){
         nickname = null;
     }
