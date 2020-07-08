@@ -22,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Nickname;
 import java.io.IOException;
 import java.io.PrintWriter;
 import javax.servlet.annotation.WebServlet;
@@ -37,10 +38,10 @@ public class NicknameServlet extends HttpServlet {
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.println("<h1>Set Nickname</h1>");
-
+    Nickname nickobj = new Nickname();
     UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
-      String nickname = getUserNickname(userService.getCurrentUser().getUserId());
+      String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
       response.sendRedirect("/nickname.html");
     } else {
       String loginUrl = userService.createLoginURL("/nickname");
@@ -69,20 +70,5 @@ public class NicknameServlet extends HttpServlet {
     response.sendRedirect("/index.html");
   }
 
-  /**
-   * Returns the nickname of the user with id, or empty String if the user has not set a nickname.
-   */
-  private String getUserNickname(String id) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query =
-        new Query("UserInfo")
-            .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return "";
-    }
-    String nickname = (String) entity.getProperty("nickname");
-    return nickname;
-  }
+  
 }

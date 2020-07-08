@@ -27,6 +27,7 @@ import com.google.cloud.translate.TranslateOptions;
 import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Nickname;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +35,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 
 /** Servlet that returns comments and updates the datastore with comments*/
 @WebServlet("/data")
@@ -47,10 +49,11 @@ public class DataServlet extends HttpServlet {
     int numComments = Integer.valueOf(request.getParameter("numComments"));
     String language = request.getParameter("language");
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); // sort by time posted
-
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments= new ArrayList<>();
+
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
     
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
@@ -58,7 +61,6 @@ public class DataServlet extends HttpServlet {
           String text = (String) entity.getProperty("text");
 
           // Do the translation.
-          Translate translate = TranslateOptions.getDefaultInstance().getService();
           Translation translation =
             translate.translate(text, Translate.TranslateOption.targetLanguage(language));
           String translatedText = translation.getTranslatedText();
@@ -88,9 +90,11 @@ public class DataServlet extends HttpServlet {
     String text = request.getParameter("text");
     long timestamp = System.currentTimeMillis();
     String email = userService.getCurrentUser().getEmail();
-    String nickname = getUserNickname(userService.getCurrentUser().getUserId());
- 
-
+    Nickname nickobj = new Nickname();
+    String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
+    if(nickname == ""){
+        nickname = null;
+    }
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text",text);
     commentEntity.setProperty("timestamp", timestamp);
@@ -100,8 +104,9 @@ public class DataServlet extends HttpServlet {
     datastore.put(commentEntity);
     response.sendRedirect("/index.html"); 
   }
-
+    
   /** Returns the nickname of the user with id, or null if the user has not set a nickname. */
+  /**
   private String getUserNickname(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
@@ -115,4 +120,5 @@ public class DataServlet extends HttpServlet {
     String nickname = (String) entity.getProperty("nickname");
     return nickname;
   }
+  **/
 }
