@@ -33,15 +33,16 @@ import javax.servlet.http.HttpServletResponse;
 @WebServlet("/nickname")
 public class NicknameServlet extends HttpServlet {
 
+  private final UserService userService = UserServiceFactory.getUserService();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     response.setContentType("text/html");
     PrintWriter out = response.getWriter();
     out.println("<h1>Set Nickname</h1>");
 
-    UserService userService = UserServiceFactory.getUserService();
     if (userService.isUserLoggedIn()) {
-      // String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
       String nickname = Nickname.getUserNickname(userService.getCurrentUser().getUserId());
       response.sendRedirect("/nickname.html");
     } else {
@@ -52,16 +53,13 @@ public class NicknameServlet extends HttpServlet {
 
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
     if (!userService.isUserLoggedIn()) {
       response.sendRedirect("/nickname");
       return;
     }
     String nickname = request.getParameter("nickname");
     String id = userService.getCurrentUser().getUserId();
-
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-
+    
     Entity entity = new Entity("UserInfo", id);
     entity.setProperty("id", id);
     entity.setProperty("nickname", nickname);

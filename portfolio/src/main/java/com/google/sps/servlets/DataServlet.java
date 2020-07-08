@@ -42,8 +42,8 @@ import javax.servlet.http.HttpServletResponse;
 public class DataServlet extends HttpServlet {
     
   private final Gson gson = new Gson();
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  UserService userService = UserServiceFactory.getUserService();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final UserService userService = UserServiceFactory.getUserService();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -91,8 +91,6 @@ public class DataServlet extends HttpServlet {
     String text = request.getParameter("text");
     long timestamp = System.currentTimeMillis();
     String email = userService.getCurrentUser().getEmail();
-    // Nickname nickobj = new Nickname();
-    // String nickname = nickobj.getUserNickname(userService.getCurrentUser().getUserId());
     String nickname = Nickname.getUserNickname(userService.getCurrentUser().getUserId());
     if(nickname == ""){
         nickname = null;
