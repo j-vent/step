@@ -91,12 +91,12 @@ function getLogin(){
           document.getElementById("commentSection").style.display="block";
           var logoutbtn = document.getElementById("logoutbtn");
           logoutbtn.style.display="block";
-          logoutbtn.href = status.loginUrl;
+          logoutbtn.href = status.url;
       }
       else{
           var loginbtn = document.getElementById("loginbtn");
           loginbtn.style.display="block";
-          loginbtn.href = status.loginUrl;
+          loginbtn.href = status.url;
       }
   });
 }

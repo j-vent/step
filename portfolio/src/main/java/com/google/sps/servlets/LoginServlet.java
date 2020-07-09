@@ -31,8 +31,8 @@ public class LoginServlet extends HttpServlet{
 
     private final UserService userService = UserServiceFactory.getUserService();
     private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    private static final String urlToRedirectToAfterUserLogsIn = "/nickname";
-    private static final String urlToRedirectToAfterUserLogsOut = "/index.html";
+    private static final String URL_TO_REDIRECT_TO_AFTER_LOGIN = "/nickname";
+    private static final String URL_TO_REDIRECT_TO_AFTER_LOGOUT = "/index.html";
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
@@ -41,11 +41,11 @@ public class LoginServlet extends HttpServlet{
 
       if(!userService.isUserLoggedIn()){
         isLoggedIn = false;
-        url = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+        url = userService.createLoginURL(URL_TO_REDIRECT_TO_AFTER_LOGIN);
       }
       else{
         isLoggedIn =true;
-        url = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+        url = userService.createLogoutURL(URL_TO_REDIRECT_TO_AFTER_LOGOUT);
       }
       Status status = new Status(userService.isUserLoggedIn(),url);
       Gson gson = new Gson();
