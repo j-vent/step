@@ -141,12 +141,22 @@
         <br/>
         <br/>
         <label class="center" for="numComments">How many comments would you like to see?</label>
-        <br/>
         <input class="center" type="number" id="numComments" name="numComments" min="0" max="10" onChange="getComments()">
         <ul class="center" id="comment-list"></ul>
+        <br/>
+        <form>
+          <label for="languages">Choose a language:</label>
+          <select name="languages" id="languages" onChange="getComments()">
+            <option value="en">English</option>
+            <option value="zh">Chinese</option>
+            <option value="hi">Hindi</option>
+            <option value="es">Spanish</option>
+            <option value="ar">Arabic</option>
+          </select>
+        </form>
+       
         <div class="center">
           <button onclick="deleteComments()"  class="btn btn-sm btn-outline-secondary">Delete All Comments</button>
-          <!--<button onclick="getLogin()"  class=" btn btn-sm btn-outline-secondary">Check Login Info</button>-->
           <br/>
           <a id ="loginbtn" class=" btn btn-sm btn-outline-secondary">Login</a>
           <a id ="logoutbtn" class=" btn btn-sm btn-outline-secondary">Logout</a>

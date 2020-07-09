@@ -22,8 +22,13 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.Translate.TranslateOption;
+import com.google.cloud.translate.TranslateOptions;
+import com.google.cloud.translate.Translation;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
+import com.google.sps.data.Nickname;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,37 +37,55 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /** Servlet that returns comments and updates the datastore with comments*/
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-  
-  DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-  UserService userService = UserServiceFactory.getUserService();
+    
+  private final Gson gson = new Gson();
+  private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+  private final UserService userService = UserServiceFactory.getUserService();
+
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    int numComments = Integer.parseInt(request.getParameter("numComments"));
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); // sort by time posted
+    
+    int numComments = Integer.valueOf(request.getParameter("numComments"));
+    String language = request.getParameter("language");
 
+    // sort by time posted
+    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING); 
     PreparedQuery results = datastore.prepare(query);
 
     List<Comment> comments= new ArrayList<>();
-    
+
+    Translate translate = TranslateOptions.getDefaultInstance().getService();
+    TranslateOption lang = Translate.TranslateOption.targetLanguage(language);
+
     for (Entity entity: results.asIterable()){
         if(comments.size() < numComments){
           long id = entity.getKey().getId();
           String text = (String) entity.getProperty("text");
+
+          // Do the translation.
+          Translation translation =
+            translate.translate(text, lang);
+          String translatedText = translation.getTranslatedText();
+          
           long timestamp = (long) entity.getProperty("timestamp");
           String email = (String) entity.getProperty("email");
-          String nickname= (String) entity.getProperty("nickname");
-          Comment comment = new Comment(id,text,timestamp,email, nickname);
+          String nickname = (String) entity.getProperty("nickname");
+          if(nickname == null || nickname == ""){
+              nickname = email;
+          }
+          Comment comment = new Comment(id,translatedText,timestamp,email, nickname);
           comments.add(comment);
         }
         else{
             break;
         } 
     }
-    Gson gson = new Gson();
-    response.setContentType("application/json;");
+    response.setContentType("application/json");
+    response.setCharacterEncoding("UTF-8");
     response.getWriter().println(gson.toJson(comments));
   }
 
@@ -71,9 +94,11 @@ public class DataServlet extends HttpServlet {
     String text = request.getParameter("text");
     long timestamp = System.currentTimeMillis();
     String email = userService.getCurrentUser().getEmail();
-    String nickname = getUserNickname(userService.getCurrentUser().getUserId());
- 
-
+    String nickname = Nickname.getUserNickname(userService.getCurrentUser().getUserId());
+    
+    if(nickname == ""){
+        nickname = null;
+    }
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("text",text);
     commentEntity.setProperty("timestamp", timestamp);
@@ -82,20 +107,5 @@ public class DataServlet extends HttpServlet {
 
     datastore.put(commentEntity);
     response.sendRedirect("/index.html"); 
-  }
-
-  /** Returns the nickname of the user with id, or null if the user has not set a nickname. */
-  private String getUserNickname(String id) {
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    Query query =
-        new Query("UserInfo")
-            .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return null;
-    }
-    String nickname = (String) entity.getProperty("nickname");
-    return nickname;
   }
 }
