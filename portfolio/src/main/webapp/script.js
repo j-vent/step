@@ -15,7 +15,7 @@
 function msg(){
   var text = prompt("Leave Justine a message: ");
   var name = prompt("Your name: ");
-  if (name != null && name.length>0){
+  if (name != null && name.length > 0){
     alert("Thanks for your message "+name+ "! Justine will get back to you shortly.");
   }
 }
@@ -29,7 +29,6 @@ function bunnymsg(){
 window.addEventListener("scroll", function() {
   var elementTarget = document.getElementById("proj");
   if (window.pageYOffset>= (elementTarget.offsetTop ) ){
-    console.log("You've scrolled past the projects");
     document.getElementById("blog").style.display = 'block';
   }
   else{
@@ -38,14 +37,14 @@ window.addEventListener("scroll", function() {
 });
 
 function getComments() {
-  console.log(document.getElementById("languages").value);
   const language=document.getElementById("languages").value;
   const numComments = document.getElementById("numComments").value;
   fetch('/data?numComments='+ numComments+ '&language=' + language)
   .then(response => response.json())
   .then((comments) => {
     const commentSection = document.getElementById('comment-list');
-    commentSection.innerText = ""; // clear old comments 
+    // clear old comments 
+    commentSection.innerText = ""; 
     comments.forEach((comment) => {
     commentSection.appendChild(createCommentElement(comment)); 
     });
@@ -93,21 +92,16 @@ function getLogin(){
   fetch('/login')
   .then(response => response.json())
   .then(status =>{
-      console.log(status.isLoggedIn);
       if(status.isLoggedIn){
           document.getElementById("commentSection").style.display="block";
           var logoutbtn = document.getElementById("logoutbtn");
           logoutbtn.style.display="block";
-          // TO DO: try not to hardcode, just the path
-          // logoutbtn.href =" https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/_ah/logout?continue=%2F"
-          logoutbtn.href =status.loginUrl;
+          logoutbtn.href = status.url;
       }
       else{
-          console.log(status.loginUrl);
           var loginbtn = document.getElementById("loginbtn");
           loginbtn.style.display="block";
-          // loginbtn.href ="https://8080-02745c19-09bf-48b4-a014-a5ee55f7c78e.us-west1.cloudshell.dev/" + status.loginUrl;
-          loginbtn.href =status.loginUrl;
+          loginbtn.href = status.url;
       }
   });
 }

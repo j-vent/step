@@ -28,21 +28,24 @@ import javax.servlet.http.HttpServletResponse;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet{
+
+    private final UserService userService = UserServiceFactory.getUserService();
+    private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    private static final String URL_TO_REDIRECT_TO_AFTER_LOGIN = "/nickname";
+    private static final String URL_TO_REDIRECT_TO_AFTER_LOGOUT = "/index.html";
+
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException{
       boolean isLoggedIn;
-      String  url="";
-      UserService userService = UserServiceFactory.getUserService();
+      String  url = "";
 
       if(!userService.isUserLoggedIn()){
-        isLoggedIn =false;
-        String urlToRedirectToAfterUserLogsIn = "/nickname";
-        url = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
+        isLoggedIn = false;
+        url = userService.createLoginURL(URL_TO_REDIRECT_TO_AFTER_LOGIN);
       }
       else{
         isLoggedIn =true;
-        String urlToRedirectToAfterUserLogsOut = "/index.html";
-        url = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+        url = userService.createLogoutURL(URL_TO_REDIRECT_TO_AFTER_LOGOUT);
       }
       Status status = new Status(userService.isUserLoggedIn(),url);
       Gson gson = new Gson();
@@ -52,7 +55,6 @@ public class LoginServlet extends HttpServlet{
 
      /** Returns the nickname of the user with id, or null if the user has not set a nickname. */
     private String getUserNickname(String id) {
-        DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
         Query query =
             new Query("UserInfo")
                 .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
