@@ -46,7 +46,7 @@ function getComments() {
     // clear old comments 
     commentSection.innerText = ""; 
     comments.forEach((comment) => {
-      commentSection.appendChild(createCommentElement(comment));
+    commentSection.appendChild(createCommentElement(comment)); 
     });
   });
 }
@@ -54,13 +54,18 @@ function getComments() {
 function createCommentElement(comment){
     const commentElement = document.createElement("li");
     const textElement = document.createElement("span");
-    const userElement = document.createElement("div");
+    const userElement = document.createElement("span");
+    const scoreElement = document.createElement("span");
     textElement.className = "commenttxt";
     userElement.className = "emailtxt";
+    scoreElement.className = "scoretxt";
     textElement.innerText = comment.text;
     userElement.innerText = "-" + comment.nickname;
+    scoreElement.innerText = comment.score; 
     commentElement.appendChild(textElement);
+    commentElement.appendChild(scoreElement);
     commentElement.appendChild(userElement);
+
     return commentElement;
 }
 
