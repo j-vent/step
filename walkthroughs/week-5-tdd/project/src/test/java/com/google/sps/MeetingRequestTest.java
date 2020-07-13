@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** */
+/**
 @RunWith(JUnit4.class)
 public final class MeetingRequestTest {
   // Some people that we can use in our tests.
@@ -34,7 +34,7 @@ public final class MeetingRequestTest {
   private static final String PERSON_C = "Person C";
 
   private static final int DURATION_1_HOUR = 60;
-  /**
+  
   @Test
   public void CantAddOptionalAttendeeWhoIsAlsoMandatory() {
     MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_1_HOUR);
@@ -44,5 +44,5 @@ public final class MeetingRequestTest {
     int expected = 0;
     Assert.assertEquals(expected, actual);
   }
-  **/
-}
+
+}  **/
