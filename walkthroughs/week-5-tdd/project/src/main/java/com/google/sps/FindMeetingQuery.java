@@ -28,7 +28,7 @@ public final class FindMeetingQuery {
     // List<TimeRange> fullDay = new Set<TimeRange>();
     fullDay.add(TimeRange.WHOLE_DAY);
    
-
+ 
     List<TimeRange> availableTimes = new ArrayList<TimeRange>();
     
     // throw new UnsupportedOperationException("TODO: Implement this method.");
@@ -36,7 +36,7 @@ public final class FindMeetingQuery {
     Collection<String> attendees = request.getAttendees();
  
     // this is some horrific n^3 runtime
-
+ 
     // cannot modify arraylist in an enhanced for loop, must create separate arraylists
     List<TimeRange> freeTimes = new ArrayList<TimeRange>();
     List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
@@ -48,30 +48,51 @@ public final class FindMeetingQuery {
               TimeRange blocked = event.getWhen();
               int start = blocked.start();
               int end = blocked.end();
-            
+                /**
+                |----------|
+                    |----|
+ 
+                     |--|
+                    |-------|
+ 
+                    |----|
+                        |-----|
+ 
+                    |-----|
+                |----|
+                **/
               for(TimeRange timeslot: fullDay){
                 if(blocked.overlaps(timeslot)){
-                     // top overlap: add a timeslot before this event
-                    if(start >= timeslot.start() && start < timeslot.end()){
-                      freetime = TimeRange.fromStartEnd(timeslot.start(), start,false);
-                      if(!fullDay.contains(freetime)){
-                        freeTimes.add(freetime);
-                      }
-                     
+                    if(start >= timeslot.start() && end <= timeslot.end()){
+                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
+                      freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
                     }
-                    if(end >= timeslot.start() && end < timeslot.end()){
-                      // bottom overlap: add a timeslot after this event
-                      freetime = TimeRange.fromStartEnd(end,timeslot.end(),false);
-                      if(!fullDay.contains(freetime)){
-                        freeTimes.add(freetime);
+                    /**
+                    else if(start <= timeslot.start() && end >= timeslot.end()){
+                      blockedTimes.add(timeslot);
+                    }
+                    **/
+                    else if(start >= timeslot.start() && end >= timeslot.end()){
+                      if(start != timeslot.start()){
+                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
                       }
                     }
+                    else if(start < timeslot.start() && end >= timeslot.start()){
+                        if(end != timeslot.end()){
+                            freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                        }
+                        
+                      }
+                    
+                   
                     blockedTimes.add(timeslot);
+                    
+                    
                 }
               }
               fullDay.removeAll(blockedTimes);
               fullDay.addAll(freeTimes);
-
+ 
                 
             }
         }
@@ -84,6 +105,8 @@ public final class FindMeetingQuery {
     return fullDay;
   }
 }
+ 
+ 
  
  
  
