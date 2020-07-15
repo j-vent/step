@@ -36,81 +36,61 @@ import java.util.Set;
                 **/
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-     List<TimeRange> fullDay = new ArrayList<TimeRange>();
-    // List<TimeRange> fullDay = new Set<TimeRange>();
-    fullDay.add(TimeRange.WHOLE_DAY);
-   
- 
-    List<TimeRange> availableTimes = new ArrayList<TimeRange>();
-    
     // throw new UnsupportedOperationException("TODO: Implement this method.");
+
+    List<TimeRange> fullDay = new ArrayList<TimeRange>();
+    fullDay.add(TimeRange.WHOLE_DAY);
     
     Collection<String> attendees = request.getAttendees();
- 
-    // this is some horrific n^3 runtime
  
     // cannot modify arraylist in an enhanced for loop, must create separate arraylists
     List<TimeRange> freeTimes = new ArrayList<TimeRange>();
     List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
-    TimeRange freetime;
+    TimeRange blocked;
+    int start, end;
+
     for(Event event: events){
         Set<String> eventAttendees = event.getAttendees();
         for(String attendee:eventAttendees){
             if(attendees.contains(attendee)){
-              TimeRange blocked = event.getWhen();
-              int start = blocked.start();
-              int end = blocked.end();
+              blocked = event.getWhen();
+              start = blocked.start();
+              end = blocked.end();
                
               for(TimeRange timeslot: fullDay){
                 if(blocked.overlaps(timeslot)){
                     if(start > timeslot.start() && end < timeslot.end()){
-                        
                         freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
                         freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
-                    
-                        System.out.println("case 1 ");
-                        System.out.println(blocked);
                     }
-                    
-                    else if(start < timeslot.start() && end > timeslot.end()){
-                      blockedTimes.add(timeslot);
-                      System.out.println("case 2 ");
-                        System.out.println(blocked);
-                    }
-                    
                     else if(start >= timeslot.start() && end >= timeslot.end()){
                       if(start != timeslot.start()){
                       freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
                       }
-                      System.out.println("case 3 ");
-                        System.out.println(blocked);
                     }
                     else if(start <= timeslot.start() && end >= timeslot.start()){
                         if(end != timeslot.end()){
                             freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
                         }
-                        System.out.println("case 4 ");
-                        System.out.println(blocked);
-                      }
-
+                    }
                     blockedTimes.add(timeslot);
                 }
-                
               }
               fullDay.addAll(freeTimes);
               fullDay.removeAll(blockedTimes);
-              System.out.println(fullDay);
+              // must clear everytime so that blocked events don't get added back
               freeTimes.clear();
-               blockedTimes.clear();
-               
+              blockedTimes.clear();
             }
         }
     }
+
     for(TimeRange available: fullDay){
       if(available.duration() < request.getDuration()){
           blockedTimes.add(available);
       }
     }
+
     fullDay.removeAll(blockedTimes);
     return fullDay;
   }
