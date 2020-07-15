@@ -31,51 +31,52 @@ public final class FindMeetingQuery {
     List<TimeRange> freeTimes = new ArrayList<TimeRange>();
     List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
 
-    TimeRange blocked;
-    int start, end;
+
     Collection<String> attendees = request.getAttendees();
     Set<String> eventAttendees;
-
-    for(Event event: events){
-        eventAttendees = event.getAttendees();
-        for(String attendee:eventAttendees){
-            if(attendees.contains(attendee)){
-              blocked = event.getWhen();
-              start = blocked.start();
-              end = blocked.end();
-               
-              for(TimeRange timeslot: fullDay){
-                if(blocked.overlaps(timeslot)){
-                    // case one: event is fully enclosed within a free timeslot
-                    if(start > timeslot.start() && end < timeslot.end()){
-                        freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
-                        freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
-                    }
-                    // case two: event overlaps end of free timeslot
-                    else if(start >= timeslot.start() && end >= timeslot.end()){
-                      if(start != timeslot.start()){
-                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
-                      }
-                    }
-                    // case three: event overlaps start of free timeslot
-                    else if(start <= timeslot.start() && end >= timeslot.start()){
-                        if(end != timeslot.end()){
-                            freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
-                        }
-                    }
-                    blockedTimes.add(timeslot);
-                }
-              }
-              fullDay.addAll(freeTimes);
-              fullDay.removeAll(blockedTimes);
-              // must clear everytime so that blocked events don't get added back
-              freeTimes.clear();
-              blockedTimes.clear();
-              // add a break to break early if one attendee is present at event
-              break; 
-            }
+    
+  for(Event event: events){
+    eventAttendees = event.getAttendees();
+    boolean isOverlappedAttendee = false;
+    for(String attendee:eventAttendees){
+      if(attendees.contains(attendee)){
+        isOverlappedAttendee = true;
+        // add a break to terminate loop early if at least one attendee is present at event
+        break; 
         }
+      }
+      if(isOverlappedAttendee){
+        TimeRange blocked = event.getWhen();
+        for(TimeRange timeslot: fullDay){
+          if(blocked.overlaps(timeslot)){
+            // case one: event is fully enclosed within a free timeslot
+            if(blocked.start() > timeslot.start() && blocked.end() < timeslot.end()){
+              freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
+              freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
+            }
+            // case two: event overlaps end of free timeslot
+            else if(blocked.start() >= timeslot.start() && blocked.end() >= timeslot.end()){
+              if(blocked.start()  != timeslot.start()){
+                freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
+              }
+            }
+            // case three: event overlaps start of free timeslot
+            else if(blocked.start() <= timeslot.start() && blocked.end() >= timeslot.start()){
+              if(blocked.end()  != timeslot.end()){
+                freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
+              }
+            }
+            blockedTimes.add(timeslot);
+          }
+        }
+        fullDay.addAll(freeTimes);
+        fullDay.removeAll(blockedTimes);
+        // must clear everytime so that blocked events don't get added back
+        freeTimes.clear();
+        blockedTimes.clear();
+      }
     }
+        
     // filter through available times to find sufficient durations
     for(TimeRange available: fullDay){
       if(available.duration() < request.getDuration()){
@@ -86,31 +87,36 @@ public final class FindMeetingQuery {
     
     // try to insert optional attendees into existing timeslots 
     attendees = request.getOptionalAttendees();
-    
     for(Event event: events){
         eventAttendees = event.getAttendees();
+        boolean isOverlappedOptAttendee = false;
         for(String attendee:eventAttendees){
             if(attendees.contains(attendee)){
-              blocked = event.getWhen();
-              start = blocked.start();
-              end = blocked.end();
+              isOverlappedOptAttendee = true;
+              break; 
+            }
+        }
+        if(isOverlappedOptAttendee){
+          TimeRange blocked = event.getWhen();
+              int start = blocked.start();
+              int end = blocked.end();
               for(TimeRange timeslot: fullDay){
                 if(blocked.overlaps(timeslot) && timeslot.duration()-blocked.duration() >= request.getDuration()){
-                    if(start > timeslot.start() && end < timeslot.end()){
-                        freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
+                    if(blocked.start() > timeslot.start() && blocked.end() < timeslot.end()){
+                        freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
                         freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
-                        // added to all bc there is a case where the free timeslot should be kept
+                        // added to all cases bc there is a case where the free timeslot should be kept
                         blockedTimes.add(timeslot); 
                     }
-                    else if(start >= timeslot.start() && end <= timeslot.end()){
-                      if(start != timeslot.start()){
-                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
+                    else if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
+                      if(blocked.start() != timeslot.start()){
+                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
                       }
                       blockedTimes.add(timeslot);
                     }
-                    else if(start <= timeslot.start() && end <= timeslot.start()){
-                        if(end != timeslot.end()){
-                            freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                    else if(blocked.start()<= timeslot.start() && blocked.end() <= timeslot.start()){
+                        if(blocked.end() != timeslot.end()){
+                            freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
                         }
                         blockedTimes.add(timeslot);
                     }
@@ -120,8 +126,7 @@ public final class FindMeetingQuery {
               fullDay.removeAll(blockedTimes);
               freeTimes.clear();
               blockedTimes.clear();
-              break; 
-            }
+
         }
     }
     return fullDay;
