@@ -21,7 +21,19 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
  
+  /**
+                |----------|
+                    |----|
  
+                     |--|
+                    |-------|
+ 
+                    |----|
+                        |-----|
+ 
+                    |-----|
+                |----|
+                **/
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
      List<TimeRange> fullDay = new ArrayList<TimeRange>();
@@ -48,60 +60,58 @@ public final class FindMeetingQuery {
               TimeRange blocked = event.getWhen();
               int start = blocked.start();
               int end = blocked.end();
-                /**
-                |----------|
-                    |----|
- 
-                     |--|
-                    |-------|
- 
-                    |----|
-                        |-----|
- 
-                    |-----|
-                |----|
-                **/
+               
               for(TimeRange timeslot: fullDay){
                 if(blocked.overlaps(timeslot)){
-                    if(start >= timeslot.start() && end <= timeslot.end()){
-                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
-                      freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                    if(start > timeslot.start() && end < timeslot.end()){
+                        
+                        freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
+                        freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                    
+                        System.out.println("case 1 ");
+                        System.out.println(blocked);
                     }
-                    /**
-                    else if(start <= timeslot.start() && end >= timeslot.end()){
+                    
+                    else if(start < timeslot.start() && end > timeslot.end()){
                       blockedTimes.add(timeslot);
+                      System.out.println("case 2 ");
+                        System.out.println(blocked);
                     }
-                    **/
+                    
                     else if(start >= timeslot.start() && end >= timeslot.end()){
                       if(start != timeslot.start()){
                       freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
                       }
+                      System.out.println("case 3 ");
+                        System.out.println(blocked);
                     }
-                    else if(start < timeslot.start() && end >= timeslot.start()){
+                    else if(start <= timeslot.start() && end >= timeslot.start()){
                         if(end != timeslot.end()){
                             freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
                         }
-                        
+                        System.out.println("case 4 ");
+                        System.out.println(blocked);
                       }
-                    
-                   
+
                     blockedTimes.add(timeslot);
-                    
-                    
                 }
-              }
-              fullDay.removeAll(blockedTimes);
-              fullDay.addAll(freeTimes);
- 
                 
+              }
+              fullDay.addAll(freeTimes);
+              fullDay.removeAll(blockedTimes);
+              System.out.println(fullDay);
+              freeTimes.clear();
+               blockedTimes.clear();
+               
             }
         }
     }
-    //System.out.println("fullday");
-    //System.out.println(fullDay);
-    // get all the remaining, free time slots
-    
-    // List<TimeRange> availableTimes = new ArrayList<TimeRange>();
+    for(TimeRange available: fullDay){
+      if(available.duration() < request.getDuration()){
+          blockedTimes.add(available);
+      }
+    }
+    fullDay.removeAll(blockedTimes);
     return fullDay;
   }
 }

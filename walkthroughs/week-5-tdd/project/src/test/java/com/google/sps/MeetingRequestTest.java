@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/**
+
 @RunWith(JUnit4.class)
 public final class MeetingRequestTest {
   // Some people that we can use in our tests.
@@ -45,4 +45,4 @@ public final class MeetingRequestTest {
     Assert.assertEquals(expected, actual);
   }
 
-}  **/
+}  
