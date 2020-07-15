@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
  
-  /**
+  /** top is free timeslot
                 |----------|
                     |----|
  
@@ -48,10 +48,11 @@ public final class FindMeetingQuery {
     List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
     TimeRange blocked;
     int start, end;
-
+    // TODO: Rewrite these loops as functions 
     for(Event event: events){
         Set<String> eventAttendees = event.getAttendees();
         for(String attendee:eventAttendees){
+            // add a break to break early if one is found 
             if(attendees.contains(attendee)){
               blocked = event.getWhen();
               start = blocked.start();
@@ -81,17 +82,76 @@ public final class FindMeetingQuery {
               // must clear everytime so that blocked events don't get added back
               freeTimes.clear();
               blockedTimes.clear();
+              break;
             }
         }
     }
-
-    for(TimeRange available: fullDay){
+        for(TimeRange available: fullDay){
       if(available.duration() < request.getDuration()){
           blockedTimes.add(available);
       }
     }
-
     fullDay.removeAll(blockedTimes);
+    System.out.println("checking optional now...");
+    Collection<String> optAttendees = request.getOptionalAttendees();
+    for(Event event: events){
+        Set<String> eventAttendees = event.getAttendees();
+        for(String attendee:eventAttendees){
+            if(optAttendees.contains(attendee)){
+              blocked = event.getWhen();
+              start = blocked.start();
+              end = blocked.end();
+              System.out.println("blocked");
+              System.out.println(blocked);
+              for(TimeRange timeslot: fullDay){
+                if(blocked.overlaps(timeslot) && timeslot.duration()-blocked.duration() >= request.getDuration()){
+                    if(start > timeslot.start() && end < timeslot.end()){
+                        freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
+                        freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                        System.out.println("case1");
+                         blockedTimes.add(timeslot);
+                    }
+                    // if condition before may already handle this
+                    else if(start <= timeslot.start() && end >= timeslot.end() ){
+                         System.out.println("case2");
+                         // keep the timeslot if the optional person's schedule exceeds free timeslot
+                    }
+                    else if(start >= timeslot.start() && end <= timeslot.end()){
+                      if(start != timeslot.start()){
+                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), start,false));
+                      }
+                      System.out.println("case3");
+                       blockedTimes.add(timeslot);
+                    }
+                    else if(start <= timeslot.start() && end <= timeslot.start()){
+                        if(end != timeslot.end()){
+                            freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                        }
+                        System.out.println("case4");
+                         blockedTimes.add(timeslot);
+                    }
+                    // blockedTimes.add(timeslot);
+                }
+              }
+              fullDay.addAll(freeTimes);
+              fullDay.removeAll(blockedTimes);
+              // must clear everytime so that blocked events don't get added back
+              freeTimes.clear();
+              blockedTimes.clear();
+            }
+        }
+    }
+    /**
+     for(TimeRange available: fullDay){
+      if(available.duration() < request.getDuration()){
+          blockedTimes.add(available);
+      }
+    }
+    fullDay.removeAll(blockedTimes);
+    **/
+
+
+
     return fullDay;
   }
 }
