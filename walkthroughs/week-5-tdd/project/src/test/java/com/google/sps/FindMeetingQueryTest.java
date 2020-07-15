@@ -353,6 +353,7 @@ public final class FindMeetingQueryTest {
             Arrays.asList(PERSON_B)),
         new Event("Event 3", TimeRange.fromStartDuration(TIME_1100AM, DURATION_90_MINUTES),
             Arrays.asList(PERSON_B)));
+
     MeetingRequest request = new MeetingRequest(NO_ATTENDEES,DURATION_30_MINUTES);
     request.addOptionalAttendee(PERSON_A);
     request.addOptionalAttendee(PERSON_B);
@@ -369,7 +370,8 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void optionalAttendeesNoGaps(){
-    // Have all optional attendees with gaps in their schedule
+    // Have all optional attendees without gaps in their schedule
+
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
             Arrays.asList(PERSON_A)),
@@ -383,7 +385,6 @@ public final class FindMeetingQueryTest {
     Collection<TimeRange> actual = query.query(events, request);
     Collection<TimeRange> expected = new ArrayList<TimeRange>();
        
-
     Assert.assertEquals(expected, actual);
   }
 
