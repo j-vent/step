@@ -23,17 +23,17 @@ import java.util.Set;
  
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-    // create a full day of free timeslots
-    List<TimeRange> fullDay = new ArrayList<TimeRange>();
-    fullDay.add(TimeRange.WHOLE_DAY);
+  // create a full day of free timeslots
+  List<TimeRange> fullDay = new ArrayList<TimeRange>();
+  fullDay.add(TimeRange.WHOLE_DAY);
     
-    // cannot modify arraylist in an enhanced for loop, must create separate arraylists
-    List<TimeRange> freeTimes = new ArrayList<TimeRange>();
-    List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
+  // cannot modify arraylist in an enhanced for loop, must create separate arraylists
+  List<TimeRange> freeTimes = new ArrayList<TimeRange>();
+  List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
 
 
-    Collection<String> attendees = request.getAttendees();
-    Set<String> eventAttendees;
+  Collection<String> attendees = request.getAttendees();
+  Set<String> eventAttendees;
     
   for(Event event: events){
     eventAttendees = event.getAttendees();
@@ -50,18 +50,19 @@ public final class FindMeetingQuery {
         for(TimeRange timeslot: fullDay){
           if(blocked.overlaps(timeslot)){
             // case one: event is fully enclosed within a free timeslot
-            if(blocked.start() > timeslot.start() && blocked.end() < timeslot.end()){
+            if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
+              
               freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
               freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
             }
             // case two: event overlaps end of free timeslot
-            else if(blocked.start() >= timeslot.start() && blocked.end() >= timeslot.end()){
+            else if(blocked.start() > timeslot.start() && blocked.end() > timeslot.end()){
               if(blocked.start()  != timeslot.start()){
                 freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
               }
             }
             // case three: event overlaps start of free timeslot
-            else if(blocked.start() <= timeslot.start() && blocked.end() >= timeslot.start()){
+            else if(blocked.start() < timeslot.start() && blocked.end() > timeslot.start()){
               if(blocked.end()  != timeslot.end()){
                 freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
               }
@@ -102,23 +103,12 @@ public final class FindMeetingQuery {
               int end = blocked.end();
               for(TimeRange timeslot: fullDay){
                 if(blocked.overlaps(timeslot) && timeslot.duration()-blocked.duration() >= request.getDuration()){
-                    if(blocked.start() > timeslot.start() && blocked.end() < timeslot.end()){
+                    if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
+                        if(blocked.start() != timeslot.start()){
                         freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
-                        freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));
+                        freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));}
                         // added to all cases bc there is a case where the free timeslot should be kept
                         blockedTimes.add(timeslot); 
-                    }
-                    else if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
-                      if(blocked.start() != timeslot.start()){
-                      freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
-                      }
-                      blockedTimes.add(timeslot);
-                    }
-                    else if(blocked.start()<= timeslot.start() && blocked.end() <= timeslot.start()){
-                        if(blocked.end() != timeslot.end()){
-                            freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
-                        }
-                        blockedTimes.add(timeslot);
                     }
                 }
               }
