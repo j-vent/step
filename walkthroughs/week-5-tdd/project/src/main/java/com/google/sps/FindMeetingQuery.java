@@ -22,59 +22,79 @@ import java.util.List;
 import java.util.Set;
  
 public final class FindMeetingQuery {
-  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-  // create a full day of free timeslots
-  List<TimeRange> fullDay = new ArrayList<TimeRange>();
-  fullDay.add(TimeRange.WHOLE_DAY);
-    
+
+  private List<TimeRange> fullDay = new ArrayList<TimeRange>();
+  
   // cannot modify arraylist in an enhanced for loop, must create separate arraylists
-  List<TimeRange> freeTimes = new ArrayList<TimeRange>();
-  List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
-
-
-  Collection<String> attendees = request.getAttendees();
-  Set<String> eventAttendees;
-    
-  for(Event event: events){
-    eventAttendees = event.getAttendees();
-    boolean isOverlappedAttendee = false;
-    for(String attendee:eventAttendees){
-      if(attendees.contains(attendee)){
-        isOverlappedAttendee = true;
-        // add a break to terminate loop early if at least one attendee is present at event
-        break; 
+  private List<TimeRange> freeTimes = new ArrayList<TimeRange>();
+  private List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
+  
+  private void updateAvailability(){
+    fullDay.addAll(freeTimes);
+    fullDay.removeAll(blockedTimes);
+    // must clear everytime so that blocked events don't get added back
+    freeTimes.clear();
+    blockedTimes.clear();
+  }
+  private void addOverlappedMandatoryAttendee(TimeRange blocked){
+    for(TimeRange timeslot: fullDay){
+      if(blocked.overlaps(timeslot)){
+        // case one: event is fully enclosed within a free timeslot
+        if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
+            freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
+            freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
         }
-      }
-      if(isOverlappedAttendee){
-        TimeRange blocked = event.getWhen();
-        for(TimeRange timeslot: fullDay){
-          if(blocked.overlaps(timeslot)){
-            // case one: event is fully enclosed within a free timeslot
-            if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
-              
-              freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
-              freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
+        // case two: event overlaps end of free timeslot
+        else if(blocked.start() > timeslot.start() && blocked.end() > timeslot.end()){
+            if(blocked.start()  != timeslot.start()){
+            freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
             }
-            // case two: event overlaps end of free timeslot
-            else if(blocked.start() > timeslot.start() && blocked.end() > timeslot.end()){
-              if(blocked.start()  != timeslot.start()){
+        }
+        // case three: event overlaps start of free timeslot
+        else if(blocked.start() < timeslot.start() && blocked.end() > timeslot.start()){
+            if(blocked.end()  != timeslot.end()){
+            freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
+            }
+        }
+        blockedTimes.add(timeslot);
+        }
+    }
+    updateAvailability();
+      
+  }
+
+  private void addOverlappedOptAttendee(TimeRange blocked, long requestDuration){
+      for(TimeRange timeslot: fullDay){
+        // if optional attendee's timeslot fits within the free timeslots of the mandatory attendees
+        // while still keeping the required duration of a meeting
+        if(blocked.overlaps(timeslot) && timeslot.duration() - blocked.duration() >= requestDuration){
+          if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
+              if(blocked.start() != timeslot.start()){
                 freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
-              }
-            }
-            // case three: event overlaps start of free timeslot
-            else if(blocked.start() < timeslot.start() && blocked.end() > timeslot.start()){
-              if(blocked.end()  != timeslot.end()){
                 freeTimes.add(TimeRange.fromStartEnd(blocked.end(),timeslot.end(),false));
               }
-            }
-            blockedTimes.add(timeslot);
+                blockedTimes.add(timeslot); 
           }
         }
-        fullDay.addAll(freeTimes);
-        fullDay.removeAll(blockedTimes);
-        // must clear everytime so that blocked events don't get added back
-        freeTimes.clear();
-        blockedTimes.clear();
+      }
+      updateAvailability();
+  }
+
+  public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+  // create a full day of free timeslots
+    fullDay.add(TimeRange.WHOLE_DAY);
+
+    Collection<String> attendees = request.getAttendees();
+    Set<String> eventAttendees;
+
+    for(Event event: events){
+      eventAttendees = event.getAttendees();
+      for(String attendee:eventAttendees){
+        if(attendees.contains(attendee)){
+          addOverlappedMandatoryAttendee(event.getWhen());
+          // add a break to terminate loop early if at least one attendee is present at event
+          break; 
+        }
       }
     }
         
@@ -86,38 +106,17 @@ public final class FindMeetingQuery {
     }
     fullDay.removeAll(blockedTimes);
     
-    // try to insert optional attendees into existing timeslots 
+    // insert optional attendees into existing timeslots 
     attendees = request.getOptionalAttendees();
     for(Event event: events){
         eventAttendees = event.getAttendees();
-        boolean isOverlappedOptAttendee = false;
         for(String attendee:eventAttendees){
             if(attendees.contains(attendee)){
-              isOverlappedOptAttendee = true;
+              addOverlappedOptAttendee(event.getWhen(), request.getDuration());
               break; 
             }
         }
-        if(isOverlappedOptAttendee){
-          TimeRange blocked = event.getWhen();
-              int start = blocked.start();
-              int end = blocked.end();
-              for(TimeRange timeslot: fullDay){
-                if(blocked.overlaps(timeslot) && timeslot.duration()-blocked.duration() >= request.getDuration()){
-                    if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
-                        if(blocked.start() != timeslot.start()){
-                        freeTimes.add(TimeRange.fromStartEnd(timeslot.start(), blocked.start(),false));
-                        freeTimes.add(TimeRange.fromStartEnd(end,timeslot.end(),false));}
-                        // added to all cases bc there is a case where the free timeslot should be kept
-                        blockedTimes.add(timeslot); 
-                    }
-                }
-              }
-              fullDay.addAll(freeTimes);
-              fullDay.removeAll(blockedTimes);
-              freeTimes.clear();
-              blockedTimes.clear();
-
-        }
+        
     }
     return fullDay;
   }
