@@ -31,7 +31,6 @@ public final class FindMeetingQuery {
   
   /* filter through timeslots to find those with sufficient durations */
   private void filterForSufficientDuration(long requestDuration){
-    
     for(TimeRange available: fullDay){
       if(available.duration() < requestDuration){
           blockedTimes.add(available);
@@ -99,7 +98,7 @@ public final class FindMeetingQuery {
 
     Collection<String> attendees = request.getAttendees();
     Set<String> eventAttendees;
-    
+
     // insert mandatory attendees into existing timeslots
     for(Event event: events){
       eventAttendees = event.getAttendees();
