@@ -29,13 +29,28 @@ public final class FindMeetingQuery {
   private List<TimeRange> freeTimes = new ArrayList<TimeRange>();
   private List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
   
+  /* filter through timeslots to find those with sufficient durations */
+  private void filterForSufficientDuration(long requestDuration){
+    
+    for(TimeRange available: fullDay){
+      if(available.duration() < requestDuration){
+          blockedTimes.add(available);
+      }
+    }
+    fullDay.removeAll(blockedTimes);
+  }
+
+  /* update fullDay to reflect recently added attendees' events */
   private void updateAvailability(){
     fullDay.addAll(freeTimes);
     fullDay.removeAll(blockedTimes);
-    // must clear everytime so that blocked events don't get added back
-    freeTimes.clear();
-    blockedTimes.clear();
+    // clear so that previously blocked events don't get added back
+    if(Collections.disjoint(freeTimes, blockedTimes)){
+      freeTimes.clear();
+      blockedTimes.clear();
+    }
   }
+
   private void addOverlappedMandatoryAttendee(TimeRange blocked){
     for(TimeRange timeslot: fullDay){
       if(blocked.overlaps(timeslot)){
@@ -60,13 +75,11 @@ public final class FindMeetingQuery {
         }
     }
     updateAvailability();
-      
   }
 
   private void addOverlappedOptAttendee(TimeRange blocked, long requestDuration){
       for(TimeRange timeslot: fullDay){
-        // if optional attendee's timeslot fits within the free timeslots of the mandatory attendees
-        // while still keeping the required duration of a meeting
+        // optional attendee's timeslot must retain the required duration of a meeting
         if(blocked.overlaps(timeslot) && timeslot.duration() - blocked.duration() >= requestDuration){
           if(blocked.start() >= timeslot.start() && blocked.end() <= timeslot.end()){
               if(blocked.start() != timeslot.start()){
@@ -81,12 +94,13 @@ public final class FindMeetingQuery {
   }
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
-  // create a full day of free timeslots
+    // create a full day of free timeslots
     fullDay.add(TimeRange.WHOLE_DAY);
 
     Collection<String> attendees = request.getAttendees();
     Set<String> eventAttendees;
-
+    
+    // insert mandatory attendees into existing timeslots
     for(Event event: events){
       eventAttendees = event.getAttendees();
       for(String attendee:eventAttendees){
@@ -97,14 +111,8 @@ public final class FindMeetingQuery {
         }
       }
     }
-        
-    // filter through available times to find sufficient durations
-    for(TimeRange available: fullDay){
-      if(available.duration() < request.getDuration()){
-          blockedTimes.add(available);
-      }
-    }
-    fullDay.removeAll(blockedTimes);
+    
+    filterForSufficientDuration(request.getDuration());
     
     // insert optional attendees into existing timeslots 
     attendees = request.getOptionalAttendees();
@@ -116,7 +124,6 @@ public final class FindMeetingQuery {
               break; 
             }
         }
-        
     }
     return fullDay;
   }
