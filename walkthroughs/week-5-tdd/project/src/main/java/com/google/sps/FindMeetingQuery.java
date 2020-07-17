@@ -23,14 +23,8 @@ import java.util.Set;
  
 public final class FindMeetingQuery {
 
-  private List<TimeRange> fullDay = new ArrayList<TimeRange>();
-  
-  // cannot modify arraylist in an enhanced for loop, must create separate arraylists
-  private List<TimeRange> freeTimes = new ArrayList<TimeRange>();
-  private List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
-  
   /* filter through timeslots to find those with sufficient durations */
-  private void filterForSufficientDuration(long requestDuration){
+  private void filterForSufficientDuration(List<TimeRange> fullDay, List<TimeRange> freeTimes, List<TimeRange> blockedTimes, long requestDuration){
     for(TimeRange available: fullDay){
       if(available.duration() < requestDuration){
         blockedTimes.add(available);
@@ -40,16 +34,15 @@ public final class FindMeetingQuery {
   }
 
   /* update fullDay to reflect recently added attendees' events */
-  private void updateAvailability(){
+  private void updateAvailability(List<TimeRange> fullDay, List<TimeRange> freeTimes, List<TimeRange> blockedTimes){
     fullDay.addAll(freeTimes);
     fullDay.removeAll(blockedTimes);
     // cleared so previously blocked times don't get added back 
     freeTimes.clear();
     blockedTimes.clear();
-    
   }
 
-  private void addOverlappedMandatoryAttendee(TimeRange blocked){
+  private void addOverlappedMandatoryAttendee(List<TimeRange> fullDay, List<TimeRange> freeTimes, List<TimeRange> blockedTimes, TimeRange blocked){
     for(TimeRange timeslot: fullDay){
       if(blocked.overlaps(timeslot)){
         // case one: event is fully enclosed within a free timeslot
@@ -71,11 +64,11 @@ public final class FindMeetingQuery {
         }
         blockedTimes.add(timeslot);
         }
-    }
-    updateAvailability();
+      }
+      updateAvailability(fullDay, freeTimes, blockedTimes);
   }
 
-  private void addOverlappedOptAttendee(TimeRange blocked, long requestDuration){
+  private void addOverlappedOptAttendee(List<TimeRange> fullDay, List<TimeRange> freeTimes, List<TimeRange> blockedTimes, TimeRange blocked, long requestDuration){
       for(TimeRange timeslot: fullDay){
         // optional attendee's timeslot must retain the required duration of a meeting
         if(blocked.overlaps(timeslot) && timeslot.duration() - blocked.duration() >= requestDuration){
@@ -88,10 +81,16 @@ public final class FindMeetingQuery {
           }
         }
       }
-      updateAvailability();
+      updateAvailability(fullDay, freeTimes, blockedTimes);
   }
 
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
+    List<TimeRange> fullDay = new ArrayList<TimeRange>();
+  
+    // cannot modify arraylist in an enhanced for loop, must create separate arraylists
+    List<TimeRange> freeTimes = new ArrayList<TimeRange>();
+    List<TimeRange> blockedTimes = new ArrayList<TimeRange>();
+
     // create a full day of free timeslots
     fullDay.add(TimeRange.WHOLE_DAY);
 
@@ -102,20 +101,20 @@ public final class FindMeetingQuery {
     for(Event event: events){
       for(String attendee:event.getAttendees()){
         if(!Collections.disjoint(attendees, event.getAttendees())){
-          addOverlappedMandatoryAttendee(event.getWhen());
+          addOverlappedMandatoryAttendee(fullDay, freeTimes, blockedTimes, event.getWhen());
           // add a break to terminate loop early if at least one attendee is present at event
         }
       }
     }
     
-    filterForSufficientDuration(request.getDuration());
+    filterForSufficientDuration(fullDay, freeTimes, blockedTimes, request.getDuration());
     
     // insert optional attendees into existing timeslots 
     attendees = request.getOptionalAttendees();
     for(Event event: events){
         for(String attendee:event.getAttendees()){
             if(!Collections.disjoint(attendees, event.getAttendees())){
-              addOverlappedOptAttendee(event.getWhen(), request.getDuration());
+              addOverlappedOptAttendee(fullDay, freeTimes, blockedTimes, event.getWhen(), request.getDuration());
             }
         }
     }
