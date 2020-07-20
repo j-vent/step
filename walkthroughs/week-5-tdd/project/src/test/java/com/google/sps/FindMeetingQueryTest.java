@@ -25,7 +25,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** */
+ 
 @RunWith(JUnit4.class)
 public final class FindMeetingQueryTest {
   private static final Collection<Event> NO_EVENTS = Collections.emptySet();
@@ -34,6 +34,7 @@ public final class FindMeetingQueryTest {
   // Some people that we can use in our tests.
   private static final String PERSON_A = "Person A";
   private static final String PERSON_B = "Person B";
+  private static final String PERSON_C = "Person C";
 
   // All dates are the first day of the year 2020.
   private static final int TIME_0800AM = TimeRange.getTimeInMinutes(8, 0);
@@ -42,6 +43,8 @@ public final class FindMeetingQueryTest {
   private static final int TIME_0930AM = TimeRange.getTimeInMinutes(9, 30);
   private static final int TIME_1000AM = TimeRange.getTimeInMinutes(10, 0);
   private static final int TIME_1100AM = TimeRange.getTimeInMinutes(11, 00);
+  private static final int TIME_1200PM = TimeRange.getTimeInMinutes(12, 00);
+  private static final int TIME_1230PM = TimeRange.getTimeInMinutes(12, 30);
 
   private static final int DURATION_30_MINUTES = 30;
   private static final int DURATION_60_MINUTES = 60;
@@ -50,7 +53,7 @@ public final class FindMeetingQueryTest {
   private static final int DURATION_2_HOUR = 120;
 
   private FindMeetingQuery query;
-
+ 
   @Before
   public void setUp() {
     query = new FindMeetingQuery();
@@ -65,7 +68,7 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
-
+  
   @Test
   public void noOptionsForTooLongOfARequest() {
     // The duration should be longer than a day. This means there should be no options.
@@ -117,6 +120,49 @@ public final class FindMeetingQueryTest {
         Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
             TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
             TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void everyAttendeeIsConsideredWithOptionalAttendeeIgnored(){
+    Collection<Event> events = Arrays.asList(
+      new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
+        Arrays.asList(PERSON_A)),
+      new Event("Event 2", TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
+        Arrays.asList(PERSON_B)),
+      new Event("Event 3", TimeRange.fromStartDuration(TimeRange.START_OF_DAY, TimeRange.END_OF_DAY),
+        Arrays.asList(PERSON_C)));
+    MeetingRequest request =
+      new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+      Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
+      TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
+      TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void everyAttendeeIsConsideredWithOptionalAttendeeAccounted(){
+    Collection<Event> events = Arrays.asList(
+      new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
+        Arrays.asList(PERSON_A)),
+      new Event("Event 2", TimeRange.fromStartDuration(TIME_0900AM, DURATION_30_MINUTES),
+        Arrays.asList(PERSON_B)),
+      new Event("Event 3", TimeRange.fromStartDuration(TIME_0800AM, 720),
+        Arrays.asList(PERSON_C)));
+    MeetingRequest request =
+      new MeetingRequest(Arrays.asList(PERSON_A, PERSON_B), DURATION_30_MINUTES);
+    request.addOptionalAttendee(PERSON_C);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+      Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
+      TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
+      TimeRange.fromStartEnd(TIME_0930AM, TimeRange.END_OF_DAY, true));
 
     Assert.assertEquals(expected, actual);
   }
@@ -224,6 +270,32 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
+  public void justEnoughRoomWithOptionalAttendee() {
+    // Have one mandatory and one optional person, but make it so that there is just 
+    // enough room at one point in the day to have the meeting.
+    // Events  : |--A--|     |----A----|
+    // Day     : |---------------------|
+    // Options :       |-----|
+
+    Collection<Event> events = Arrays.asList(
+        new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
+            Arrays.asList(PERSON_A)),
+        new Event("Event 2", TimeRange.fromStartEnd(TIME_0900AM, TimeRange.END_OF_DAY, true),
+            Arrays.asList(PERSON_A)),
+        new Event("Event 3", TimeRange.fromStartDuration(TIME_0830AM, 15),
+            Arrays.asList(PERSON_B)));
+
+    MeetingRequest request = new MeetingRequest(Arrays.asList(PERSON_A), DURATION_30_MINUTES);
+    request.addOptionalAttendee(PERSON_B);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+        Arrays.asList(TimeRange.fromStartDuration(TIME_0830AM, DURATION_30_MINUTES));
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
   public void ignoresPeopleNotAttending() {
     // Add an event, but make the only attendee someone different from the person looking to book
     // a meeting. This event should not affect the booking.
@@ -270,5 +342,53 @@ public final class FindMeetingQueryTest {
 
     Assert.assertEquals(expected, actual);
   }
+ 
+  @Test
+  public void optionalAttendeesWithGaps(){
+    // Have all optional attendees with gaps in their schedule
+    Collection<Event> events = Arrays.asList(
+        new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
+            Arrays.asList(PERSON_A)),
+        new Event("Event 2", TimeRange.fromStartDuration(TIME_0900AM, DURATION_1_HOUR),
+            Arrays.asList(PERSON_B)),
+        new Event("Event 3", TimeRange.fromStartDuration(TIME_1100AM, DURATION_90_MINUTES),
+            Arrays.asList(PERSON_B)));
+
+    MeetingRequest request = new MeetingRequest(NO_ATTENDEES,DURATION_30_MINUTES);
+    request.addOptionalAttendee(PERSON_A);
+    request.addOptionalAttendee(PERSON_B);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected =
+        Arrays.asList(TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
+            TimeRange.fromStartEnd(TIME_0830AM, TIME_0900AM, false),
+            TimeRange.fromStartEnd(TIME_1000AM, TIME_1100AM, false),
+            TimeRange.fromStartEnd(TIME_1230PM, TimeRange.END_OF_DAY,true));
+
+    Assert.assertEquals(expected, actual);
+  }
+
+  @Test
+  public void optionalAttendeesNoGaps(){
+    // Have all optional attendees without gaps in their schedule
+
+    Collection<Event> events = Arrays.asList(
+        new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0800AM, false),
+            Arrays.asList(PERSON_A)),
+        new Event("Event 2", TimeRange.fromStartEnd(TIME_0800AM, TimeRange.END_OF_DAY, true),
+            Arrays.asList(PERSON_B)));
+    
+    MeetingRequest request = new MeetingRequest(NO_ATTENDEES,DURATION_30_MINUTES);
+    request.addOptionalAttendee(PERSON_A);
+    request.addOptionalAttendee(PERSON_B);
+
+    Collection<TimeRange> actual = query.query(events, request);
+    Collection<TimeRange> expected = new ArrayList<TimeRange>();
+       
+    Assert.assertEquals(expected, actual);
+  }
+
+
 }
 
+  

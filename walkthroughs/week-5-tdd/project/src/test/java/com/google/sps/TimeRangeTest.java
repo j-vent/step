@@ -20,9 +20,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** */
 @RunWith(JUnit4.class)
 public final class TimeRangeTest {
+  
+
   @Test
   public void equality() {
     Assert.assertEquals(TimeRange.fromStartDuration(100, 50), TimeRange.fromStartDuration(100, 50));
@@ -184,4 +185,5 @@ public final class TimeRangeTest {
     Assert.assertTrue(emptyMiddle.overlaps(range));
     Assert.assertTrue(emptyEnd.overlaps(range));
   }
+
 }
