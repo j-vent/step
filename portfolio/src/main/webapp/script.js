@@ -107,9 +107,45 @@ function getLogin(){
 }
 
 /** Creates a map that shows landmarks around Google. */
+/** 
 function createMap() {
   console.log("hereee")
   const map = new google.maps.Map(
       document.getElementById('map'),
       {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+}
+*/
+
+function initMap() {
+  var directionsService = new google.maps.DirectionsService();
+  var directionsRenderer = new google.maps.DirectionsRenderer();
+  var haight = new google.maps.LatLng(37.7699298, -122.4469157);
+  var oceanBeach = new google.maps.LatLng(37.7683909618184, -122.51089453697205);
+  var mapOptions = {
+    zoom: 14,
+    center: haight
+  }
+  var map = new google.maps.Map(document.getElementById('map'), mapOptions);
+  directionsRenderer.setMap(map);
+     document.getElementById("route").addEventListener("click", function() {
+    calcRoute(directionsService, directionsRenderer);
+  });
+}
+
+function calcRoute(directionsService, directionsRenderer) {
+  console.log('getting route');
+  
+  var request = {
+      origin:  new google.maps.LatLng(37.7699298, -122.4469157),
+      destination: new google.maps.LatLng(37.7683909618184, -122.51089453697205),
+      // Note that JavaScript allows us to access the constant
+      // using square brackets and a string value as its
+      // "property."
+      travelMode: 'DRIVING'
+  };
+  directionsService.route(request, function(response, status) {
+    if (status == 'OK') {
+      directionsRenderer.setDirections(response);
+    }
+  });
 }
